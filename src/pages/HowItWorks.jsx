@@ -34,6 +34,9 @@ const SELLER_STEPS = [
   'You receive the tracking number',
 ]
 
+/**
+ * "How it works" — step-by-step walkthrough of the customer and seller journeys.
+ */
 export default function HowItWorks() {
   return (
     <div>

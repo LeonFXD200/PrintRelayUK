@@ -25,6 +25,11 @@ const QUEUE_CAPACITY = 12 // demo "machine slots" for the capacity gauge
 const ACTIVE = ['quote-requested', 'awaiting-payment', 'file-review', 'printing', 'quality-check', 'packed']
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000
 
+/**
+ * Admin / operations dashboard. KPI cards, jobs-by-status and material-demand
+ * charts, and a searchable / filterable print queue of editable AdminJobRows.
+ * Includes the "reset demo data" action.
+ */
 export default function AdminDashboard() {
   const [loading, setLoading] = useState(true)
   const [jobs, setJobs] = useState([])

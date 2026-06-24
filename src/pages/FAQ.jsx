@@ -89,6 +89,9 @@ function Item({ faq, open, onToggle }) {
   )
 }
 
+/**
+ * FAQ page — an accordion of common customer and seller questions.
+ */
 export default function FAQ() {
   const [open, setOpen] = useState(0)
   return (

@@ -79,6 +79,11 @@ function makeBoxPositions(w, h, d) {
   return pos
 }
 
+/**
+ * Estimator page — the core flow. Handles file upload + STL parsing, the live
+ * 3D preview, all print options, a continuously recomputed quote, and either
+ * saving a draft or submitting a quote request via the mock data layer.
+ */
 export default function Estimator() {
   const { user } = useAuth()
   const navigate = useNavigate()

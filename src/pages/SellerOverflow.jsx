@@ -38,6 +38,10 @@ const WORKFLOW = [
   'You receive the tracking number',
 ]
 
+/**
+ * "For sellers" page. Pitches the white-label / overflow fulfilment offering:
+ * neutral packaging, customer-direct dispatch, and batch + repeat-order support.
+ */
 export default function SellerOverflow() {
   return (
     <div>

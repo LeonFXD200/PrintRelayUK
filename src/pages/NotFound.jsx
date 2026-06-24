@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom'
 import { Boxes, Home, ArrowLeft } from 'lucide-react'
 
+/**
+ * 404 page shown for any route that doesn't match (the catch-all in App.jsx).
+ */
 export default function NotFound() {
   return (
     <div className="section flex min-h-[60vh] flex-col items-center justify-center text-center">

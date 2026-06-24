@@ -30,6 +30,9 @@ const COLS = [
   },
 ]
 
+/**
+ * Site footer: brand blurb, contact details and grouped navigation columns.
+ */
 export default function Footer() {
   return (
     <footer className="mt-20 bg-ink text-paper-light">

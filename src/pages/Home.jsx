@@ -39,6 +39,10 @@ const STEPS = [
   { icon: Truck, title: 'Dispatch', text: 'Packed and shipped, to you or straight to your customer.' },
 ]
 
+/**
+ * Landing page. Marketing hero with the self-animating JobStatusPreview, trust
+ * points, a how-it-works summary and dual-audience (seller / maker) CTAs.
+ */
 export default function Home() {
   return (
     <div>

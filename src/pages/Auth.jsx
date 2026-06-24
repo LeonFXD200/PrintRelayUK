@@ -11,6 +11,12 @@ const DEMO_BUTTONS = [
   { role: 'admin', label: 'Demo admin', icon: Shield, hint: 'Manage the print queue' },
 ]
 
+/**
+ * Sign-in / register page. Supports email + password (demo), one-click demo
+ * role logins, and routes admins to /admin and everyone else to their dashboard.
+ *
+ * @param {{defaultMode?: 'login' | 'register'}} props
+ */
 export default function Auth({ defaultMode = 'login' }) {
   const [mode, setMode] = useState(defaultMode)
   const { login, loginAsRole, register } = useAuth()

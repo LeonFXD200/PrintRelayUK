@@ -28,6 +28,10 @@ const COMPONENTS = [
   { icon: TrendingUp, title: 'Margin', text: `A ${Math.round(PRICING.margin * 100)}% margin keeps the service sustainable and reliable.` },
 ]
 
+/**
+ * Pricing page. Explains the transparent cost model (sourced from the PRICING
+ * constants in estimatePrintCost.js) plus the dispatch-speed and shipping tables.
+ */
 export default function Pricing() {
   return (
     <div>

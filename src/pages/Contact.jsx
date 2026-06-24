@@ -4,6 +4,9 @@ import { Mail, MapPin, Clock, MessageSquare, CheckCircle2, Loader2 } from 'lucid
 import PageHeader from '../components/ui/PageHeader.jsx'
 import { TextField, Select } from '../components/ui/Field.jsx'
 
+/**
+ * Contact page with a validated demo enquiry form (no message is actually sent).
+ */
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', topic: 'general', message: '' })
   const [errors, setErrors] = useState({})

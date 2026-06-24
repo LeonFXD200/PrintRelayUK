@@ -111,6 +111,10 @@ npm run preview    # preview the production build locally
 
 ## 📂 Project structure
 
+> **Developers:** see [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for how the
+> pieces fit together (routing, the mock-data/Supabase swap seam, and the
+> estimator pipeline).
+
 ```
 src/
 ├── components/

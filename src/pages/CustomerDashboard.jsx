@@ -41,6 +41,11 @@ const TABS = [
   { id: 'company', label: 'Company & white-label', icon: Building2 },
 ]
 
+/**
+ * Customer / seller dashboard. Tabbed view of active jobs, saved estimate
+ * drafts, job history, print preferences and company / white-label settings.
+ * Reads and writes everything through the mock data layer (mockDb.js).
+ */
 export default function CustomerDashboard() {
   const { user } = useAuth()
   const [tab, setTab] = useState('jobs')

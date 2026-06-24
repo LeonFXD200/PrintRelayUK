@@ -16,6 +16,10 @@ const REJECTABLE = [
   'Files that appear unsafe or unsuitable for printing',
 ]
 
+/**
+ * File-responsibility / terms page. Summarises ownership rules and the kinds of
+ * files that may be rejected.
+ */
 export default function Terms() {
   return (
     <div>

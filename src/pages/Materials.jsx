@@ -13,6 +13,10 @@ const OUTDOOR = {
   poor: { icon: CloudRain, label: 'Indoor use', tone: 'text-ink-soft' },
 }
 
+/**
+ * Materials page. Comparison cards for each filament (use, strengths, outdoor
+ * suitability, colours and price), built from src/data/materials.js.
+ */
 export default function Materials() {
   return (
     <div>

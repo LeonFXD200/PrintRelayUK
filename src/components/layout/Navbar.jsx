@@ -28,6 +28,10 @@ function Wordmark() {
   )
 }
 
+/**
+ * Top navigation bar: brand wordmark, primary links and auth-aware actions
+ * (sign in / dashboard / admin / sign out), with a responsive mobile menu.
+ */
 export default function Navbar() {
   const [open, setOpen] = useState(false)
   const { user, isAdmin, logout } = useAuth()
