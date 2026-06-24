@@ -128,7 +128,7 @@ src/
 
 ## 🧮 How the estimate works
 
-The estimator is a **transparent approximation**, not a slicer. All business constants live at the top of [`src/utils/estimatePrintCost.js`](src/utils/estimatePrintCost.js) so pricing is trivial to tune.
+The estimator is a **transparent approximation**, not a slicer/editor. All business constants live at the top of [`src/utils/estimatePrintCost.js`](src/utils/estimatePrintCost.js) so pricing is trivial to tune.
 
 **Material usage**
 ```
