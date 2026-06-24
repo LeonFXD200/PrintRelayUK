@@ -2,9 +2,8 @@
 
 **UK-based overflow 3D print fulfilment for sellers, makers and businesses.**
 
-🌐 **Live site:** [PrintRelay UK](https://YOUR_USERNAME.github.io/PrintRelayUK/)
+🌐 **Live site:** [PrintRelay UK](https://leonfxd200.github.io/PrintRelayUK/)
 
-**UK-based overflow 3D print fulfilment for sellers, makers and businesses.**
 Upload your model, estimate the print cost instantly, choose material and dispatch speed, then track the job from quote to dispatch.
 
 PrintRelay UK is a portfolio-quality React + Vite MVP for a fictional UK 3D printing overflow and fulfilment platform. It runs **immediately in demo mode** with realistic mock data, and is **structured to drop in Supabase** for real authentication, database storage and file uploads later.
