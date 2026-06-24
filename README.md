@@ -12,6 +12,20 @@ PrintRelay UK is a portfolio-quality React + Vite MVP for a fictional UK 3D prin
 
 ---
 
+## Preview
+
+The estimator can parse uploaded STL files, show a live 3D preview, read dimensions and triangle count, and produce a quote breakdown.
+
+### Engine cooler STL
+
+![PrintRelay UK estimator showing an engine cooler STL preview and quote breakdown](docs/images/stl-estimator-engine-cooler.png)
+
+### Cable winder STL
+
+![PrintRelay UK estimator showing a cable winder STL preview and quote breakdown](docs/images/stl-estimator-cable-winder.png)
+
+---
+
 ## 💡 The business idea
 
 3D printing sellers (Etsy / eBay / TikTok shops and print farms) regularly hit a wall: a product goes viral, a printer breaks mid-batch, or an order deadline is too tight for their own capacity. PrintRelay UK is their **backup print farm** — overflow capacity that prints, packs in **neutral / white-label packaging** and ships **direct to their customer**, so the seller's brand stays front and centre.
