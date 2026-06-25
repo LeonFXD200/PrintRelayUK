@@ -6,11 +6,11 @@ import { formatGBP, formatHours } from '../../utils/format.js'
 function Row({ label, value, hint, accent }) {
   return (
     <div className="flex items-center justify-between py-2 text-sm">
-      <span className={`flex items-center gap-1.5 ${accent ? 'text-clay-600' : 'text-ink-soft'}`}>
+      <span className={`flex items-center gap-1.5 ${accent ? 'text-brand-600' : 'text-ink-soft'}`}>
         {label}
         {hint && <span className="text-xs text-ink-soft/70">({hint})</span>}
       </span>
-      <span className={`font-semibold ${accent ? 'text-clay-600' : 'text-ink'}`}>
+      <span className={`font-semibold ${accent ? 'text-brand-600' : 'text-ink'}`}>
         {formatGBP(value)}
       </span>
     </div>
@@ -96,7 +96,7 @@ export default function QuoteBreakdown({ estimate }) {
         </div>
         <div className="flex items-center justify-between py-3">
           <span className="text-base font-bold text-ink">Total</span>
-          <span className="font-display text-xl font-semibold text-clay-600">
+          <span className="font-display text-xl font-semibold text-brand-600">
             {formatGBP(total)}
           </span>
         </div>

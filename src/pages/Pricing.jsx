@@ -58,7 +58,7 @@ export default function Pricing() {
               transition={{ duration: 0.4, delay: (i % 4) * 0.05 }}
               className="card p-5"
             >
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-pine-50 text-pine-600">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-steel-50 text-steel-600">
                 <c.icon size={20} />
               </span>
               <h3 className="mt-3 font-sans text-base font-semibold text-ink">{c.title}</h3>
@@ -84,7 +84,7 @@ export default function Pricing() {
                   <p className="text-sm text-ink-soft">{d.description}</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-semibold text-clay-600">{d.window}</p>
+                  <p className="font-semibold text-brand-600">{d.window}</p>
                   <p className="text-xs text-ink-soft">
                     {d.urgencyMultiplier === 0
                       ? 'No surcharge'
@@ -135,7 +135,7 @@ export default function Pricing() {
               'Volume and repeat-order friendly',
             ].map((p) => (
               <li key={p} className="flex items-center gap-2 text-sm text-paper-light">
-                <Check size={16} className="text-clay-300" /> {p}
+                <Check size={16} className="text-brand-300" /> {p}
               </li>
             ))}
           </ul>

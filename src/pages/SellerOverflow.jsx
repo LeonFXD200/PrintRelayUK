@@ -47,7 +47,7 @@ export default function SellerOverflow() {
     <div>
       {/* Hero (dark ink block) */}
       <section className="relative overflow-hidden bg-ink text-paper-light">
-        <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-clay-500/25 blur-3xl" />
+        <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-brand-500/25 blur-3xl" />
         <div className="section relative py-16 sm:py-24">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -55,11 +55,11 @@ export default function SellerOverflow() {
             transition={{ duration: 0.5 }}
             className="max-w-3xl"
           >
-            <span className="chip bg-clay-500/20 text-clay-200">
+            <span className="chip bg-brand-500/20 text-brand-200">
               <Store size={14} /> For 3D print sellers and farms
             </span>
             <h1 className="mt-5 text-4xl font-semibold leading-[1.05] tracking-tight text-paper-light sm:text-5xl">
-              Your backup print farm, <span className="text-clay-300">without your customers knowing.</span>
+              Your backup print farm, <span className="text-brand-300">without your customers knowing.</span>
             </h1>
             <p className="mt-5 max-w-2xl text-lg text-paper/70">
               Etsy, eBay or TikTok orders piling up? Printer down at the worst possible time?
@@ -91,7 +91,7 @@ export default function SellerOverflow() {
               transition={{ duration: 0.35, delay: (i % 3) * 0.05 }}
               className="card p-5"
             >
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-clay-50 text-clay-600">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
                 <b.icon size={20} />
               </span>
               <h3 className="mt-3 font-sans text-base font-semibold text-ink">{b.title}</h3>
@@ -109,7 +109,7 @@ export default function SellerOverflow() {
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {WORKFLOW.map((step, i) => (
               <div key={step} className="relative card p-5">
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-clay-500 font-bold text-white">
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-500 font-bold text-white">
                   {i + 1}
                 </span>
                 <p className="mt-3 text-sm font-medium text-ink">{step}</p>

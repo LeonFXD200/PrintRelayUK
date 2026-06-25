@@ -153,7 +153,7 @@ export default function CustomerDashboard() {
 
         {loading ? (
           <div className="flex justify-center py-20">
-            <Loader2 className="animate-spin text-clay-500" size={32} />
+            <Loader2 className="animate-spin text-brand-500" size={32} />
           </div>
         ) : (
           <>
@@ -179,7 +179,7 @@ export default function CustomerDashboard() {
                   {estimates.map((e) => (
                     <div key={e.id} className="card-glass p-5">
                       <div className="flex items-center justify-between">
-                        <span className="font-mono text-sm text-clay-600">{e.id}</span>
+                        <span className="font-mono text-sm text-brand-600">{e.id}</span>
                         <StatusBadge statusId="draft" />
                       </div>
                       <p className="mt-1 truncate font-medium text-ink">{e.file_name}</p>

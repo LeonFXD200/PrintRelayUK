@@ -59,10 +59,10 @@ export default function AdminJobRow({ job, onUpdate }) {
         onClick={() => setOpen((o) => !o)}
         className="flex w-full flex-wrap items-center gap-3 p-4 text-left"
       >
-        <span className="font-mono text-sm font-semibold text-clay-600">{job.id}</span>
+        <span className="font-mono text-sm font-semibold text-brand-600">{job.id}</span>
         <StatusBadge statusId={draft.status} />
         {job.urgent && (
-          <span className="chip bg-clay-50 text-clay-700">
+          <span className="chip bg-brand-50 text-brand-700">
             <Zap size={12} /> Urgent
           </span>
         )}
@@ -92,7 +92,7 @@ export default function AdminJobRow({ job, onUpdate }) {
                 </h4>
                 <div className="rounded-xl bg-paper-dark p-3 text-sm">
                   <p className="flex items-center gap-2 text-ink">
-                    <FileBox size={15} className="text-clay-600" /> {job.file_name}
+                    <FileBox size={15} className="text-brand-600" /> {job.file_name}
                   </p>
                   <div className="mt-2 grid grid-cols-2 gap-1 text-xs text-ink-soft">
                     <span>Size: {formatBytes(job.file_size)}</span>

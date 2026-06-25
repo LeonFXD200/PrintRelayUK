@@ -5,8 +5,8 @@ import { motion } from 'framer-motion'
  */
 export default function StatCard({ icon: Icon, label, value, sublabel, tone = 'brand', delay = 0 }) {
   const tones = {
-    brand: 'bg-pine-50 text-pine-600',
-    ember: 'bg-clay-50 text-clay-600',
+    brand: 'bg-steel-50 text-steel-600',
+    ember: 'bg-brand-50 text-brand-600',
     emerald: 'bg-emerald-50 text-emerald-600',
     slate: 'bg-ink/[0.05] text-ink-soft',
   }

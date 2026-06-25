@@ -1,14 +1,12 @@
-/* Self-hosted editorial serif (bundled — no third-party request). */
-@import '@fontsource-variable/fraunces';
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* ----------------------------------------------------------------------------
-   PrintRelay UK — global styles (warm editorial theme)
-   Light paper background, warm ink text, serif display headings, terracotta +
-   teal accents. Reusable component classes built on Tailwind.
+   PrintRelay UK — global styles (clean industrial theme)
+   Cool white / light-grey surfaces, slate ink text, a single modern sans
+   typeface and a vivid electric-blue brand accent. Reusable component classes
+   are built on Tailwind so the whole UI shares one precise, technical look.
 ---------------------------------------------------------------------------- */
 
 @layer base {
@@ -22,56 +20,56 @@
 
   body {
     @apply bg-paper text-ink-light antialiased font-sans;
-    /* faint warm wash so the paper has subtle depth */
+    /* very faint cool wash so large flat areas keep a little depth */
     background-image:
-      radial-gradient(1100px 520px at 88% -8%, rgba(194, 90, 50, 0.06), transparent 60%),
-      radial-gradient(900px 480px at -5% 4%, rgba(31, 107, 91, 0.05), transparent 55%);
+      radial-gradient(1100px 520px at 88% -10%, rgba(27, 81, 240, 0.06), transparent 60%),
+      radial-gradient(900px 480px at -6% 2%, rgba(15, 23, 42, 0.04), transparent 55%);
     background-attachment: fixed;
   }
 
-  /* Serif display for all headings — carries the editorial character. */
+  /* Tight, confident headings — the industrial character comes from weight and
+     spacing rather than a decorative face. */
   h1,
   h2,
   h3,
   h4 {
-    @apply font-display text-ink;
-    font-optical-sizing: auto;
-    letter-spacing: -0.01em;
+    @apply font-sans text-ink;
+    letter-spacing: -0.02em;
   }
 
   ::selection {
-    background: rgba(194, 90, 50, 0.18);
+    background: rgba(27, 81, 240, 0.18);
   }
 
   :focus-visible {
-    @apply outline-none ring-2 ring-pine-500/50 ring-offset-2 ring-offset-paper;
+    @apply outline-none ring-2 ring-brand-500/50 ring-offset-2 ring-offset-paper;
   }
 }
 
 @layer components {
-  /* Clean white card on paper */
+  /* Clean white card */
   .card {
-    @apply rounded-2xl border border-ink/5 bg-white text-ink shadow-card;
+    @apply rounded-2xl border border-ink/[0.07] bg-white text-ink shadow-card;
   }
 
   /* Quieter surface that sits on the paper background */
   .card-glass {
-    @apply rounded-2xl border border-ink/10 bg-white/60 backdrop-blur-sm;
+    @apply rounded-2xl border border-ink/[0.08] bg-white/70 backdrop-blur-sm;
   }
 
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-5 py-3 text-sm font-semibold
            transition-all duration-200 focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50;
   }
 
-  /* Primary = solid ink button (editorial, high-contrast) */
+  /* Primary = solid electric-blue button (the signature CTA) */
   .btn-primary {
-    @apply btn bg-ink text-paper-light hover:bg-ink-light active:scale-[0.99];
+    @apply btn bg-brand-600 text-white shadow-sm hover:bg-brand-700 active:scale-[0.99];
   }
 
-  /* Accent = terracotta */
+  /* Accent = soft blue-tint button (secondary CTA, reads on light or dark) */
   .btn-accent {
-    @apply btn bg-clay-500 text-white hover:bg-clay-600 active:scale-[0.99];
+    @apply btn border border-brand-200 bg-brand-50 text-brand-700 hover:bg-brand-100 active:scale-[0.99];
   }
 
   .btn-ghost {
@@ -88,8 +86,8 @@
   }
 
   .field {
-    @apply w-full rounded-xl border border-ink/15 bg-white px-3.5 py-2.5 text-sm text-ink
-           placeholder:text-ink-soft/60 transition focus:border-pine-500 focus:ring-2 focus:ring-pine-500/20;
+    @apply w-full rounded-lg border border-ink/15 bg-white px-3.5 py-2.5 text-sm text-ink
+           placeholder:text-ink-soft/60 transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20;
   }
 
   .chip {
@@ -100,25 +98,25 @@
     @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
   }
 
-  /* Editorial small-caps eyebrow */
+  /* Small-caps eyebrow — brand-blue pill */
   .eyebrow {
-    @apply inline-flex items-center gap-2 rounded-full border border-clay-500/30 bg-clay-50
-           px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-clay-700;
+    @apply inline-flex items-center gap-2 rounded-full border border-brand-500/25 bg-brand-50
+           px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-brand-700;
   }
 }
 
-/* Warm scrollbar */
+/* Cool scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #ece6d9;
+  background: #e6ebf4;
 }
 ::-webkit-scrollbar-thumb {
-  background: #d6cdba;
+  background: #c2cbdb;
   border-radius: 8px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #c2b69d;
+  background: #a7b2c7;
 }

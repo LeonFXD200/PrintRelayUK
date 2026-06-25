@@ -44,7 +44,7 @@ export default function JobStatusPreview() {
 
       {/* animated current phase (dark ink panel) */}
       <div className="mt-5 flex items-center gap-3 rounded-xl bg-ink p-4 text-paper-light">
-        <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-clay-500">
+        <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-500">
           <AnimatePresence mode="wait">
             <motion.span
               key={PHASES[active].id}
@@ -77,7 +77,7 @@ export default function JobStatusPreview() {
       {/* progress bar */}
       <div className="mt-4 h-2 overflow-hidden rounded-full bg-paper-dark">
         <motion.div
-          className="h-full rounded-full bg-gradient-to-r from-clay-500 to-pine-500"
+          className="h-full rounded-full bg-gradient-to-r from-brand-500 to-steel-500"
           animate={{ width: `${progress}%` }}
           transition={{ duration: 0.5 }}
         />
@@ -96,7 +96,7 @@ export default function JobStatusPreview() {
                   done
                     ? 'bg-emerald-100 text-emerald-600'
                     : isActive
-                      ? 'bg-clay-500 text-white'
+                      ? 'bg-brand-500 text-white'
                       : 'bg-paper-dark text-ink-soft'
                 }`}
               >

@@ -26,10 +26,10 @@ export default function JobCard({ job, onReorder }) {
       >
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="font-mono text-sm font-semibold text-clay-600">{job.id}</span>
+            <span className="font-mono text-sm font-semibold text-brand-600">{job.id}</span>
             <StatusBadge statusId={job.status} />
             {job.urgent && (
-              <span className="chip bg-clay-50 text-clay-700">
+              <span className="chip bg-brand-50 text-brand-700">
                 <Zap size={12} /> Urgent
               </span>
             )}

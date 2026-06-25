@@ -1,10 +1,12 @@
 # PrintRelay UK 🇬🇧
 
-**UK-based overflow 3D print fulfilment for sellers, makers and businesses.**
+**UK 3D printing service & overflow fulfilment — instant online quotes for sellers, makers and businesses.**
 
 🌐 **Live site:** [PrintRelay UK](https://leonfxd200.github.io/PrintRelayUK/)
 
-Upload your model, estimate the print cost instantly, choose material and dispatch speed, then track the job from quote to dispatch.
+Upload one or more models, get an **instant 3D printing quote**, choose material (PLA, PETG, ABS, TPU) and dispatch speed, then track the job from quote to dispatch. A UK-based **online 3D printing service** with **white-label fulfilment** and transparent, itemised pricing.
+
+> **Keywords:** 3D printing UK · online 3D printing service · instant 3D print quote · STL upload · PLA / PETG / ABS / TPU · print on demand · overflow & white-label fulfilment.
 
 PrintRelay UK is a portfolio-quality React + Vite MVP for a fictional UK 3D printing overflow and fulfilment platform. It runs **immediately in demo mode** with realistic mock data, and is **structured to drop in Supabase** for real authentication, database storage and file uploads later.
 
@@ -47,7 +49,7 @@ It also serves **everyday customers** who simply have an STL/3MF/OBJ file and wa
 ## ✨ Features
 
 ### Customer-facing
-- **Instant estimator** with drag-and-drop upload (STL / 3MF / OBJ).
+- **Instant multi-file estimator** with drag-and-drop upload (STL / 3MF / OBJ) — add **several parts in one order**, each with its own quantity, and get a single combined quote.
 - **Real STL parsing** — binary *and* ASCII — computing genuine **mesh volume** and **bounding-box dimensions**, rendered live in an interactive **three.js** viewer.
 - **Transparent price breakdown**: material, machine time, setup, packaging, failure-risk allowance, urgency fee, margin and shipping — every line itemised.
 - **Print-time estimate** from a volumetric flow-rate model (clearly flagged as an estimate, not a slice).
@@ -70,6 +72,7 @@ It also serves **everyday customers** who simply have an STL/3MF/OBJ file and wa
 - **Code-split 3D viewer:** three.js is lazy-loaded only on the estimator, so every other page loads ~123 KB (gzipped) lighter.
 - **Resilient:** an error boundary wraps the routes (and the 3D viewer) so a bad file or render error shows a friendly fallback instead of a blank screen.
 - **Accessible:** keyboard-operable upload zone, native selects, focus-visible rings and `aria` states on custom controls.
+- **SEO-ready:** descriptive title + meta description per route, Open Graph / Twitter cards, a branded social image, JSON-LD structured data (Organization / WebSite / Service), `robots.txt`, `sitemap.xml` and a canonical URL.
 
 ---
 
@@ -77,7 +80,7 @@ It also serves **everyday customers** who simply have an STL/3MF/OBJ file and wa
 
 - **React 18** + **Vite 5**
 - **React Router 6** (HashRouter — zero-config static hosting)
-- **Tailwind CSS 3** (custom navy / electric-blue / orange design system)
+- **Tailwind CSS 3** (custom electric-blue / slate industrial design system)
 - **Framer Motion** for transitions & micro-interactions
 - **three.js** for the STL preview
 - **lucide-react** icons
@@ -253,6 +256,20 @@ The app uses a **HashRouter** and `base: './'`, so it works on GitHub Pages with
 You can also deploy the `dist/` folder to **Netlify**, **Vercel** or **Cloudflare Pages** by pointing them at `npm run build`.
 
 ---
+
+## 🔎 Repository discoverability (GitHub topics)
+
+To help people find this project on GitHub, add a short **About** description and
+**topics** in the repo (GitHub → repo home → ⚙️ *Edit repository details*). Suggested:
+
+> **About:** UK 3D printing service & overflow fulfilment — React + Vite app with an instant multi-file STL quote estimator.
+
+> **Topics:** `3d-printing` `3d-printing-service` `react` `vite` `tailwindcss`
+> `threejs` `stl` `stl-viewer` `quote-estimator` `uk` `manufacturing`
+> `print-on-demand` `web-app` `portfolio-project`
+
+These (plus the keyword-rich README and SEO meta above) are what GitHub and search
+engines index, so they directly improve the chance of the project being found.
 
 ## 🔭 Future improvements
 

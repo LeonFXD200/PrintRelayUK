@@ -7,7 +7,7 @@ import { Boxes, Home, ArrowLeft } from 'lucide-react'
 export default function NotFound() {
   return (
     <div className="section flex min-h-[60vh] flex-col items-center justify-center text-center">
-      <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-clay-50 text-clay-600">
+      <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-50 text-brand-600">
         <Boxes size={30} />
       </span>
       <p className="mt-6 font-display text-6xl font-semibold text-ink">404</p>

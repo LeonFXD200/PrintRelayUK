@@ -1,7 +1,9 @@
+import { useEffect } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import Layout from './components/layout/Layout.jsx'
 import ErrorBoundary from './components/ErrorBoundary.jsx'
 import { useAuth } from './context/AuthContext.jsx'
+import { applyRouteMeta } from './utils/seo.js'
 
 // Pages
 import Home from './pages/Home.jsx'
@@ -33,6 +35,12 @@ function Protected({ children, adminOnly = false }) {
 }
 
 export default function App() {
+  // Keep the document title + meta description in sync with the active route.
+  const { pathname } = useLocation()
+  useEffect(() => {
+    applyRouteMeta(pathname)
+  }, [pathname])
+
   return (
     <Layout>
       <ErrorBoundary>

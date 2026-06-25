@@ -4,7 +4,7 @@ import { getStatus } from '../../data/statuses.js'
 // Tailwind's JIT compiler can see them.
 const TONES = {
   slate: 'bg-ink/[0.06] text-ink-soft ring-ink/10',
-  brand: 'bg-pine-50 text-pine-700 ring-pine-600/20',
+  brand: 'bg-steel-50 text-steel-700 ring-steel-600/20',
   amber: 'bg-amber-100 text-amber-800 ring-amber-600/20',
   emerald: 'bg-emerald-100 text-emerald-800 ring-emerald-600/20',
   red: 'bg-red-100 text-red-700 ring-red-500/20',

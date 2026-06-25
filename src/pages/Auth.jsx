@@ -92,7 +92,7 @@ export default function Auth({ defaultMode = 'login' }) {
                 P
               </span>
               <span className="font-display text-xl font-semibold text-paper-light">
-                PrintRelay <span className="text-clay-300">UK</span>
+                PrintRelay <span className="text-brand-300">UK</span>
               </span>
             </Link>
             <h2 className="mt-8 text-2xl font-semibold text-paper-light">
@@ -109,9 +109,9 @@ export default function Auth({ defaultMode = 'login' }) {
                 key={d.role}
                 onClick={() => handleDemo(d.role)}
                 disabled={busy}
-                className="flex w-full items-center gap-3 rounded-xl border border-paper/15 bg-paper/5 p-3 text-left transition hover:border-clay-400/50 hover:bg-paper/10"
+                className="flex w-full items-center gap-3 rounded-xl border border-paper/15 bg-paper/5 p-3 text-left transition hover:border-brand-400/50 hover:bg-paper/10"
               >
-                <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-clay-500/20 text-clay-200">
+                <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-500/20 text-brand-200">
                   <d.icon size={18} />
                 </span>
                 <span className="flex-1">
@@ -156,7 +156,7 @@ export default function Auth({ defaultMode = 'login' }) {
                 {busy ? <Loader2 size={18} className="animate-spin" /> : 'Sign in'}
               </button>
               <p className="text-center text-xs text-ink-soft">
-                Demo accounts use password <code className="text-clay-600">demo</code>. Or use the
+                Demo accounts use password <code className="text-brand-600">demo</code>. Or use the
                 one-click logins.
               </p>
               {/* mobile demo buttons */}
@@ -169,7 +169,7 @@ export default function Auth({ defaultMode = 'login' }) {
                     disabled={busy}
                     className="rounded-lg border border-ink/10 bg-ink/[0.03] p-2 text-xs font-medium text-ink-light"
                   >
-                    <d.icon size={16} className="mx-auto mb-1 text-clay-600" />
+                    <d.icon size={16} className="mx-auto mb-1 text-brand-600" />
                     {d.role}
                   </button>
                 ))}

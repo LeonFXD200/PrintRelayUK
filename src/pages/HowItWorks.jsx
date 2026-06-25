@@ -62,7 +62,7 @@ export default function HowItWorks() {
               <span className="absolute right-4 top-4 font-display text-3xl font-semibold text-ink/[0.06]">
                 {i + 1}
               </span>
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-pine-50 text-pine-600">
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-steel-50 text-steel-600">
                 <s.icon size={22} />
               </span>
               <h3 className="mt-3 font-sans text-base font-semibold text-ink">{s.title}</h3>
@@ -75,14 +75,14 @@ export default function HowItWorks() {
       {/* Seller workflow */}
       <section className="section py-8">
         <div className="rounded-3xl bg-ink p-8 text-paper-light sm:p-10">
-          <span className="chip bg-clay-500/20 text-clay-200">Seller / white-label workflow</span>
+          <span className="chip bg-brand-500/20 text-brand-200">Seller / white-label workflow</span>
           <h2 className="mt-4 text-2xl font-semibold text-paper-light">
             Overflow fulfilment in seven steps
           </h2>
           <ol className="mt-6 space-y-3">
             {SELLER_STEPS.map((step, i) => (
               <li key={step} className="flex items-center gap-4">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-clay-500 text-sm font-bold text-white">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-500 text-sm font-bold text-white">
                   {i + 1}
                 </span>
                 <span className="text-paper/85">{step}</span>

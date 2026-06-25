@@ -11,10 +11,10 @@ export default function DemoModeBanner() {
   if (isSupabaseConfigured || hidden) return null
 
   return (
-    <div className="border-b border-pine-500/15 bg-pine-50">
-      <div className="section flex items-center justify-between gap-3 py-2 text-xs text-pine-800">
+    <div className="border-b border-steel-500/15 bg-steel-50">
+      <div className="section flex items-center justify-between gap-3 py-2 text-xs text-steel-800">
         <p className="flex items-center gap-2">
-          <Info size={14} className="shrink-0 text-pine-600" />
+          <Info size={14} className="shrink-0 text-steel-600" />
           <span>
             <strong className="font-semibold">Demo mode.</strong> Sample data, no real backend. Try
             the demo logins on the sign-in page (customer, seller or admin).
@@ -22,7 +22,7 @@ export default function DemoModeBanner() {
         </p>
         <button
           onClick={() => setHidden(true)}
-          className="rounded p-1 text-pine-700 hover:bg-pine-500/10"
+          className="rounded p-1 text-steel-700 hover:bg-steel-500/10"
           aria-label="Dismiss"
         >
           <X size={14} />

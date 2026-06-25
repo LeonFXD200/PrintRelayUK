@@ -126,7 +126,7 @@ export default function AdminDashboard() {
       <div className="section py-8">
         {loading ? (
           <div className="flex justify-center py-20">
-            <Loader2 className="animate-spin text-clay-500" size={32} />
+            <Loader2 className="animate-spin text-brand-500" size={32} />
           </div>
         ) : (
           <>
@@ -200,7 +200,7 @@ export default function AdminDashboard() {
                   <button
                     onClick={() => setUrgentOnly((v) => !v)}
                     className={`btn px-4 py-2.5 text-sm ${
-                      urgentOnly ? 'bg-clay-500 text-ink' : 'border border-ink/15 bg-white text-ink'
+                      urgentOnly ? 'bg-brand-500 text-ink' : 'border border-ink/15 bg-white text-ink'
                     }`}
                   >
                     <Zap size={15} /> Urgent

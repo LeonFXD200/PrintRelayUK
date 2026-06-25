@@ -70,7 +70,7 @@ function Item({ faq, open, onToggle }) {
         <span className="font-sans font-semibold text-ink">{faq.q}</span>
         <ChevronDown
           size={20}
-          className={`shrink-0 text-clay-600 transition-transform ${open ? 'rotate-180' : ''}`}
+          className={`shrink-0 text-brand-600 transition-transform ${open ? 'rotate-180' : ''}`}
         />
       </button>
       <AnimatePresence initial={false}>

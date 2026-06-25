@@ -33,7 +33,7 @@ export default function Terms() {
         {/* Your responsibilities */}
         <div className="card p-6">
           <div className="flex items-center gap-2">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-pine-50 text-pine-600">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-steel-50 text-steel-600">
               <ShieldCheck size={20} />
             </span>
             <h2 className="text-lg font-semibold text-ink">Your responsibilities</h2>
@@ -51,7 +51,7 @@ export default function Terms() {
         {/* What we may reject */}
         <div className="card p-6">
           <div className="flex items-center gap-2">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-clay-50 text-clay-600">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
               <Ban size={20} />
             </span>
             <h2 className="text-lg font-semibold text-ink">Files we may reject</h2>
@@ -62,7 +62,7 @@ export default function Terms() {
           <ul className="mt-3 space-y-3">
             {REJECTABLE.map((r) => (
               <li key={r} className="flex items-start gap-2.5 text-sm text-ink-soft">
-                <Ban size={16} className="mt-0.5 shrink-0 text-clay-500" />
+                <Ban size={16} className="mt-0.5 shrink-0 text-brand-500" />
                 {r}
               </li>
             ))}
@@ -73,7 +73,7 @@ export default function Terms() {
       {/* Confidential handling */}
       <section className="section pb-8">
         <div className="card flex flex-col gap-4 p-6 sm:flex-row sm:items-start">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-pine-50 text-pine-600">
+          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-steel-50 text-steel-600">
             <FileLock2 size={20} />
           </span>
           <div>
@@ -90,8 +90,8 @@ export default function Terms() {
 
       {/* Confirmation note */}
       <section className="section pb-14">
-        <div className="rounded-2xl border border-clay-500/20 bg-clay-50 p-6">
-          <p className="text-sm text-clay-800">
+        <div className="rounded-2xl border border-brand-500/20 bg-brand-50 p-6">
+          <p className="text-sm text-brand-800">
             <strong>At checkout</strong> you&apos;ll be asked to tick:{' '}
             <em>&ldquo;I confirm I own this file or have permission to have it printed.&rdquo;</em>{' '}
             This keeps everyone protected and is required before we begin any job.

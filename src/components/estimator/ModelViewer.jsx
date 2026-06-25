@@ -8,7 +8,7 @@ import { Box } from 'lucide-react'
  * Auto-centres, scales to fit, lights the scene and enables orbit controls.
  * Falls back to a placeholder when no geometry is available (e.g. 3MF/OBJ).
  */
-export default function ModelViewer({ positions, colour = '#c25a32' }) {
+export default function ModelViewer({ positions, colour = '#3b6cff' }) {
   const mountRef = useRef(null)
 
   useEffect(() => {
@@ -58,7 +58,7 @@ export default function ModelViewer({ positions, colour = '#c25a32' }) {
     // subtle wireframe overlay for a "technical" look
     const wire = new THREE.LineSegments(
       new THREE.EdgesGeometry(geometry, 30),
-      new THREE.LineBasicMaterial({ color: 0x1c1813, transparent: true, opacity: 0.06 }),
+      new THREE.LineBasicMaterial({ color: 0x0f172a, transparent: true, opacity: 0.07 }),
     )
     wire.rotation.x = -Math.PI / 2
     scene.add(wire)
@@ -68,12 +68,12 @@ export default function ModelViewer({ positions, colour = '#c25a32' }) {
     const key = new THREE.DirectionalLight(0xffffff, 1.1)
     key.position.set(1, 1.4, 1)
     scene.add(key)
-    const rim = new THREE.DirectionalLight(0x1f6b5b, 0.5)
+    const rim = new THREE.DirectionalLight(0x1b51f0, 0.5)
     rim.position.set(-1.2, 0.4, -1)
     scene.add(rim)
 
     // ground grid for scale
-    const grid = new THREE.GridHelper(maxDim * 2.4, 16, 0xb8ac93, 0xd6cdba)
+    const grid = new THREE.GridHelper(maxDim * 2.4, 16, 0x94a3b8, 0xcbd5e1)
     grid.position.y = -size.y / 2 - maxDim * 0.02
     scene.add(grid)
 

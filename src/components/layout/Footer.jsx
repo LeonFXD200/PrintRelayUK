@@ -44,7 +44,7 @@ export default function Footer() {
               P
             </span>
             <span className="font-display text-xl font-semibold text-paper-light">
-              PrintRelay <span className="text-clay-300">UK</span>
+              PrintRelay <span className="text-brand-300">UK</span>
             </span>
           </Link>
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-paper/60">
@@ -53,13 +53,13 @@ export default function Footer() {
           </p>
           <div className="mt-5 space-y-2 text-sm text-paper/70">
             <p className="flex items-center gap-2">
-              <Mail size={15} className="text-clay-300" /> hello@printrelay.uk
+              <Mail size={15} className="text-brand-300" /> hello@printrelay.uk
             </p>
             <p className="flex items-center gap-2">
-              <MapPin size={15} className="text-clay-300" /> Manchester, United Kingdom
+              <MapPin size={15} className="text-brand-300" /> Manchester, United Kingdom
             </p>
             <p className="flex items-center gap-2">
-              <ShieldCheck size={15} className="text-clay-300" /> Confidential file handling
+              <ShieldCheck size={15} className="text-brand-300" /> Confidential file handling
             </p>
           </div>
         </div>
@@ -75,7 +75,7 @@ export default function Footer() {
                 <li key={`${l.to}-${i}`}>
                   <Link
                     to={l.to}
-                    className="text-sm text-paper/60 transition hover:text-clay-300"
+                    className="text-sm text-paper/60 transition hover:text-brand-300"
                   >
                     {l.label}
                   </Link>

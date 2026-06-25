@@ -59,7 +59,7 @@ export default function Home() {
             <span className="eyebrow mb-5">UK overflow 3D print fulfilment</span>
             <h1 className="text-4xl font-semibold leading-[1.04] tracking-tight text-ink sm:text-5xl lg:text-[3.6rem]">
               Overflow 3D print fulfilment for when your printers{' '}
-              <span className="text-clay-600">can&apos;t keep up.</span>
+              <span className="text-brand-600">can&apos;t keep up.</span>
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">
               Upload your model, get an instant estimate, choose material and dispatch speed, then
@@ -69,7 +69,7 @@ export default function Home() {
             {/* CTAs */}
             <div className="mt-8 flex flex-wrap gap-3">
               <Link to="/estimator" className="btn-primary px-6 py-3 text-base">
-                Estimate a print <ArrowRight size={18} />
+                Get instant quote <ArrowRight size={18} />
               </Link>
               <Link to="/sellers" className="btn-accent px-6 py-3 text-base">
                 Join as a seller
@@ -82,7 +82,7 @@ export default function Home() {
                 to="/sellers"
                 className="card group flex items-start gap-3 p-4 transition hover:shadow-lift"
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-pine-50 text-pine-600">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-steel-50 text-steel-600">
                   <Store size={20} />
                 </span>
                 <span>
@@ -91,14 +91,14 @@ export default function Home() {
                 </span>
                 <ArrowRight
                   size={16}
-                  className="ml-auto mt-1 text-ink-soft transition group-hover:translate-x-1 group-hover:text-clay-600"
+                  className="ml-auto mt-1 text-ink-soft transition group-hover:translate-x-1 group-hover:text-brand-600"
                 />
               </Link>
               <Link
                 to="/estimator"
                 className="card group flex items-start gap-3 p-4 transition hover:shadow-lift"
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-clay-50 text-clay-600">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
                   <User size={20} />
                 </span>
                 <span>
@@ -107,7 +107,7 @@ export default function Home() {
                 </span>
                 <ArrowRight
                   size={16}
-                  className="ml-auto mt-1 text-ink-soft transition group-hover:translate-x-1 group-hover:text-clay-600"
+                  className="ml-auto mt-1 text-ink-soft transition group-hover:translate-x-1 group-hover:text-brand-600"
                 />
               </Link>
             </div>
@@ -116,7 +116,7 @@ export default function Home() {
           {/* Right: animated preview */}
           <div className="flex justify-center lg:justify-end">
             <div className="relative">
-              <div className="absolute -inset-8 -z-10 rounded-full bg-clay-500/10 blur-3xl" />
+              <div className="absolute -inset-8 -z-10 rounded-full bg-brand-500/10 blur-3xl" />
               <JobStatusPreview />
             </div>
           </div>
@@ -135,7 +135,7 @@ export default function Home() {
               transition={{ duration: 0.4, delay: i * 0.05 }}
               className="card p-5"
             >
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-pine-50 text-pine-600">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-steel-50 text-steel-600">
                 <t.icon size={20} />
               </span>
               <h3 className="mt-3 font-sans text-base font-semibold text-ink">{t.title}</h3>
@@ -189,10 +189,10 @@ export default function Home() {
       {/* ===================== SELLER OVERFLOW BANNER ===================== */}
       <section className="section py-10">
         <motion.div {...reveal} className="relative overflow-hidden rounded-3xl bg-ink p-8 text-paper-light sm:p-12">
-          <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-clay-500/25 blur-3xl" />
+          <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-brand-500/25 blur-3xl" />
           <div className="relative grid items-center gap-8 lg:grid-cols-2">
             <div>
-              <span className="chip bg-clay-500/20 text-clay-200">For 3D print sellers</span>
+              <span className="chip bg-brand-500/20 text-brand-200">For 3D print sellers</span>
               <h2 className="mt-4 text-3xl font-semibold text-paper-light">
                 Your backup print farm, without your customers knowing.
               </h2>
@@ -202,7 +202,7 @@ export default function Home() {
                 and centre.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <Link to="/sellers" className="btn-accent">
+                <Link to="/sellers" className="btn-primary">
                   White-label fulfilment <ArrowRight size={16} />
                 </Link>
                 <Link to="/pricing" className="btn-light">
@@ -223,7 +223,7 @@ export default function Home() {
                   key={b}
                   className="flex items-center gap-2 rounded-xl bg-paper/10 px-3 py-2.5 text-sm text-paper-light"
                 >
-                  <span className="h-1.5 w-1.5 rounded-full bg-clay-400" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-brand-400" />
                   {b}
                 </li>
               ))}
@@ -244,7 +244,7 @@ export default function Home() {
           </p>
           <div className="mt-6 flex justify-center gap-3">
             <Link to="/estimator" className="btn-primary px-6 py-3 text-base">
-              Estimate a print <ArrowRight size={18} />
+              Get instant quote <ArrowRight size={18} />
             </Link>
             <Link to="/contact" className="btn-ghost px-6 py-3 text-base">
               Talk to us

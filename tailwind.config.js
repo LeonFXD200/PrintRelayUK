@@ -1,62 +1,73 @@
 /** @type {import('tailwindcss').Config} */
-// PrintRelay UK design system — warm editorial direction.
-// Light "paper" background, warm near-black ink, a terracotta (clay) primary
-// accent and a deep teal (pine) secondary, with a serif display face.
-// Inspired by narrative-driven, editorial agency sites rather than glossy SaaS.
+// PrintRelay UK design system — clean industrial / manufacturing direction.
+// Crisp white + cool-grey surfaces, a near-black slate ink, and a vivid
+// electric-blue brand accent with a neutral steel secondary. A single modern
+// sans typeface throughout. Inspired by precision B2B manufacturing services
+// (clear, technical, trustworthy) rather than warm editorial or glossy SaaS.
 export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
     extend: {
       colors: {
-        // Page background + light surfaces
+        // Page background + light surfaces (cool, near-white)
         paper: {
-          DEFAULT: '#f4f1ea', // warm off-white page background
-          light: '#fbf9f4',
-          dark: '#ece6d9',
+          DEFAULT: '#f4f6fb', // soft cool-grey page background
+          light: '#ffffff', // pure white cards / surfaces
+          dark: '#e6ebf4', // slightly deeper grey band
         },
-        // Primary text / dark elements (warm near-black)
+        // Primary text / dark elements (cool near-black slate)
         ink: {
-          DEFAULT: '#1c1813',
-          light: '#3a342b',
-          soft: '#6b6357',
+          DEFAULT: '#0f172a',
+          light: '#334155',
+          soft: '#64748b',
         },
-        // Clay — terracotta primary accent
-        clay: {
-          50: '#faf2ec',
-          100: '#f2ddcf',
-          200: '#e6bca3',
-          300: '#d99974',
-          400: '#cd7a4e',
-          500: '#c25a32', // base
-          600: '#a64926',
-          700: '#883a22',
-          800: '#6f311f',
-          900: '#5c2b1d',
+        // Brand — vivid electric blue (primary accent + CTAs)
+        brand: {
+          50: '#eef4ff',
+          100: '#d9e6ff',
+          200: '#b8d2ff',
+          300: '#8ab4ff',
+          400: '#5a8eff',
+          500: '#3b6cff',
+          600: '#1b51f0', // base — primary buttons
+          700: '#1640c4',
+          800: '#17379b',
+          900: '#182f7a',
         },
-        // Pine — deep teal/green secondary accent
-        pine: {
-          50: '#ecf4f1',
-          100: '#d2e6df',
-          200: '#a6cdc2',
-          300: '#73ad9f',
-          400: '#3f8b79',
-          500: '#1f6b5b', // base
-          600: '#175548',
-          700: '#134138',
-          800: '#11342e',
-          900: '#0d2823',
+        // Steel — neutral cool-grey secondary accent
+        steel: {
+          50: '#f4f6f9',
+          100: '#e7ebf1',
+          200: '#cfd6e0',
+          300: '#aab4c4',
+          400: '#7e8aa0',
+          500: '#5d6a82',
+          600: '#475266',
+          700: '#38414f',
+          800: '#2a313c',
+          900: '#1c2129',
         },
       },
       fontFamily: {
-        // Editorial serif display (self-hosted via @fontsource-variable/fraunces)
-        display: ['"Fraunces Variable"', 'Fraunces', 'Georgia', 'Cambria', 'serif'],
-        // Clean system sans for body + UI (no webfont, fully private)
+        // One clean, modern system sans for everything — no webfont request, so
+        // the app stays fully private (no font-CDN / IP leak) and runs offline.
         sans: [
           'system-ui',
           '-apple-system',
           'Segoe UI',
           'Roboto',
-          'Helvetica',
+          'Helvetica Neue',
+          'Arial',
+          'sans-serif',
+        ],
+        // `display` kept as a token (used by existing headings) but pointed at
+        // the same sans stack for a consistent industrial look.
+        display: [
+          'system-ui',
+          '-apple-system',
+          'Segoe UI',
+          'Roboto',
+          'Helvetica Neue',
           'Arial',
           'sans-serif',
         ],
@@ -66,8 +77,8 @@ export default {
         '3xl': '1.4rem',
       },
       boxShadow: {
-        card: '0 1px 2px rgba(28,24,19,0.04), 0 12px 32px -16px rgba(28,24,19,0.18)',
-        lift: '0 18px 50px -24px rgba(28,24,19,0.35)',
+        card: '0 1px 2px rgba(15,23,42,0.04), 0 14px 32px -18px rgba(15,23,42,0.20)',
+        lift: '0 22px 50px -24px rgba(15,23,42,0.30)',
       },
       keyframes: {
         'fade-up': {
@@ -85,7 +96,7 @@ export default {
       },
       backgroundImage: {
         'grid-faint':
-          'linear-gradient(rgba(28,24,19,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(28,24,19,0.04) 1px, transparent 1px)',
+          'linear-gradient(rgba(15,23,42,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(15,23,42,0.045) 1px, transparent 1px)',
       },
     },
   },

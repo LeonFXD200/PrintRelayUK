@@ -22,7 +22,7 @@ function Wordmark() {
         P
       </span>
       <span className="font-display text-xl font-semibold tracking-tight text-ink">
-        PrintRelay <span className="text-clay-600">UK</span>
+        PrintRelay <span className="text-brand-600">UK</span>
       </span>
     </span>
   )
@@ -86,7 +86,7 @@ export default function Navbar() {
                 <User size={16} /> Sign in
               </NavLink>
               <NavLink to="/estimator" className="btn-primary px-4 py-2 text-sm">
-                Estimate a print
+                Get instant quote
               </NavLink>
             </>
           )}
@@ -144,7 +144,7 @@ export default function Navbar() {
                     className="btn-primary mt-2 w-full"
                     onClick={() => setOpen(false)}
                   >
-                    Estimate a print
+                    Get instant quote
                   </NavLink>
                 </>
               )}

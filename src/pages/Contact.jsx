@@ -50,7 +50,7 @@ export default function Contact() {
             { icon: MessageSquare, title: 'Best for', text: 'Bulk, white-label and special jobs' },
           ].map((c) => (
             <div key={c.title} className="card flex items-start gap-3 p-4">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-pine-50 text-pine-600">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-steel-50 text-steel-600">
                 <c.icon size={18} />
               </span>
               <div>

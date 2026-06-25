@@ -7,7 +7,7 @@ import { motion } from 'framer-motion'
  */
 export default function BarChart({ data, unit = '', accent = 'brand' }) {
   const max = Math.max(...data.map((d) => d.value), 1)
-  const colour = accent === 'ember' ? 'from-clay-500 to-clay-400' : 'from-pine-500 to-pine-400'
+  const colour = accent === 'ember' ? 'from-brand-500 to-brand-400' : 'from-steel-500 to-steel-400'
 
   if (!data.length) {
     return <p className="py-6 text-center text-sm text-ink-soft">No data yet.</p>

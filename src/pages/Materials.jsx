@@ -45,9 +45,9 @@ export default function Materials() {
                     <h3 className="text-xl font-semibold text-ink">{m.name}</h3>
                     <p className="text-sm text-ink-soft">{m.use}</p>
                   </div>
-                  <span className="rounded-xl bg-pine-50 px-3 py-2 text-right">
+                  <span className="rounded-xl bg-steel-50 px-3 py-2 text-right">
                     <span className="block text-xs text-ink-soft">from</span>
-                    <span className="font-semibold text-pine-700">{formatGBP(m.costPerKgGBP)}/kg</span>
+                    <span className="font-semibold text-steel-700">{formatGBP(m.costPerKgGBP)}/kg</span>
                   </span>
                 </div>
 
@@ -68,7 +68,7 @@ export default function Materials() {
                     <span
                       className={`chip ${
                         m.requiresEnclosure
-                          ? 'bg-clay-50 text-clay-700'
+                          ? 'bg-brand-50 text-brand-700'
                           : 'bg-emerald-50 text-emerald-700'
                       }`}
                     >

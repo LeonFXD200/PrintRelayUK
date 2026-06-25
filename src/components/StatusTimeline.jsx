@@ -30,7 +30,7 @@ export default function StatusTimeline({ currentStatus, horizontal = false }) {
                     done
                       ? 'bg-emerald-100 text-emerald-700 ring-emerald-600/30'
                       : active
-                        ? 'bg-pine-500 text-white ring-pine-400'
+                        ? 'bg-steel-500 text-white ring-steel-400'
                         : 'bg-ink/[0.05] text-ink-soft ring-ink/10'
                   }`}
                 >
@@ -65,7 +65,7 @@ export default function StatusTimeline({ currentStatus, horizontal = false }) {
                 done
                   ? 'bg-emerald-100 text-emerald-700 ring-emerald-600/30'
                   : active
-                    ? 'bg-pine-500 text-white ring-pine-400'
+                    ? 'bg-steel-500 text-white ring-steel-400'
                     : 'bg-paper-dark text-ink-soft ring-ink/10'
               }`}
             >
@@ -83,7 +83,7 @@ export default function StatusTimeline({ currentStatus, horizontal = false }) {
                 <motion.p
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="text-xs text-pine-600"
+                  className="text-xs text-steel-600"
                 >
                   In progress
                 </motion.p>
