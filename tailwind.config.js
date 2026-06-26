@@ -15,24 +15,24 @@ export default {
           light: '#ffffff', // pure white cards / surfaces
           dark: '#e6ebf4', // slightly deeper grey band
         },
-        // Primary text / dark elements (cool near-black slate)
+        // Primary text / dark elements (deep navy — Sculpteo-style)
         ink: {
-          DEFAULT: '#0f172a',
-          light: '#334155',
-          soft: '#64748b',
+          DEFAULT: '#14233f',
+          light: '#33425c',
+          soft: '#6b7789',
         },
-        // Brand — vivid electric blue (primary accent + CTAs)
+        // Brand — bright azure blue (primary accent + CTAs)
         brand: {
-          50: '#eef4ff',
-          100: '#d9e6ff',
-          200: '#b8d2ff',
-          300: '#8ab4ff',
-          400: '#5a8eff',
-          500: '#3b6cff',
-          600: '#1b51f0', // base — primary buttons
-          700: '#1640c4',
-          800: '#17379b',
-          900: '#182f7a',
+          50: '#eaf4fe',
+          100: '#d2e7fd',
+          200: '#aacffb',
+          300: '#79b2f8',
+          400: '#4a93f2',
+          500: '#2e86f0', // azure base
+          600: '#1f72e0', // primary buttons
+          700: '#195fc0',
+          800: '#1a4f9b',
+          900: '#1b437d',
         },
         // Steel — neutral cool-grey secondary accent
         steel: {
@@ -89,10 +89,35 @@ export default {
           '0%,100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-8px)' },
         },
+        bob: {
+          '0%,100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-6px)' },
+        },
+        'spin-slow': {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
+        'pulse-soft': {
+          '0%,100%': { opacity: '1', transform: 'scale(1)' },
+          '50%': { opacity: '0.85', transform: 'scale(1.06)' },
+        },
+        'drive': {
+          '0%,100%': { transform: 'translateX(-4px)' },
+          '50%': { transform: 'translateX(4px)' },
+        },
+        'sheen': {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
+        },
       },
       animation: {
         'fade-up': 'fade-up 0.5s ease-out both',
         float: 'float 6s ease-in-out infinite',
+        bob: 'bob 2.6s ease-in-out infinite',
+        'spin-slow': 'spin-slow 9s linear infinite',
+        'pulse-soft': 'pulse-soft 2.8s ease-in-out infinite',
+        drive: 'drive 2.4s ease-in-out infinite',
+        sheen: 'sheen 2.5s linear infinite',
       },
       backgroundImage: {
         'grid-faint':

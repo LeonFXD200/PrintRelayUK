@@ -34,12 +34,12 @@ export default function JobStatusPreview() {
       className="card relative w-full max-w-sm overflow-hidden p-5 shadow-lift"
     >
       {/* header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-ink-soft">Live job</p>
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-wider text-ink-soft">Live job</p>
+        <div className="flex items-center gap-2">
           <p className="font-display text-lg font-semibold text-ink">PR-1042 · 24× Keyrings</p>
+          <span className="chip bg-emerald-100 text-emerald-700">On track</span>
         </div>
-        <span className="chip bg-emerald-100 text-emerald-700">On track</span>
       </div>
 
       {/* animated current phase (dark ink panel) */}
@@ -77,7 +77,7 @@ export default function JobStatusPreview() {
       {/* progress bar */}
       <div className="mt-4 h-2 overflow-hidden rounded-full bg-paper-dark">
         <motion.div
-          className="h-full rounded-full bg-gradient-to-r from-brand-500 to-steel-500"
+          className="h-full rounded-full bg-gradient-to-r from-brand-400 to-brand-600"
           animate={{ width: `${progress}%` }}
           transition={{ duration: 0.5 }}
         />

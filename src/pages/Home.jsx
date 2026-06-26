@@ -13,6 +13,7 @@ import {
   Calculator,
   Printer,
   Truck,
+  Cog,
 } from 'lucide-react'
 import JobStatusPreview from '../components/home/JobStatusPreview.jsx'
 
@@ -24,6 +25,12 @@ const reveal = {
   transition: { duration: 0.5 },
 }
 
+// Card hover lift used across the marketing sections.
+const lift = {
+  whileHover: { y: -6 },
+  transition: { type: 'spring', stiffness: 300, damping: 22 },
+}
+
 const TRUST = [
   { icon: MapPin, title: 'UK based', text: 'Printed and dispatched in the UK, with no long overseas waits.' },
   { icon: PackageOpen, title: 'White-label dispatch', text: 'Neutral packaging, shipped direct to your customer.' },
@@ -32,11 +39,12 @@ const TRUST = [
   { icon: ShieldCheck, title: 'Secure file handling', text: 'Files are only used to quote, print and fulfil your order.' },
 ]
 
+// `anim` is a Tailwind animation class that gives each step icon its own life.
 const STEPS = [
-  { icon: Upload, title: 'Upload', text: 'Drop in your STL, 3MF or OBJ file.' },
-  { icon: Calculator, title: 'Estimate', text: 'Instant price, weight and print-time estimate.' },
-  { icon: Printer, title: 'We print', text: 'Your job enters our queue, gets printed and checked.' },
-  { icon: Truck, title: 'Dispatch', text: 'Packed and shipped, to you or straight to your customer.' },
+  { icon: Upload, title: 'Upload', text: 'Drop in your STL, 3MF or OBJ file.', anim: 'animate-bob' },
+  { icon: Calculator, title: 'Estimate', text: 'Instant price, weight and print-time estimate.', anim: 'animate-pulse-soft' },
+  { icon: Printer, title: 'We print', text: 'Your job enters our queue, gets printed and checked.', anim: 'animate-pulse-soft' },
+  { icon: Truck, title: 'Dispatch', text: 'Packed and shipped, to you or straight to your customer.', anim: 'animate-drive' },
 ]
 
 /**
@@ -80,10 +88,10 @@ export default function Home() {
             <div className="mt-10 grid gap-3 sm:grid-cols-2">
               <Link
                 to="/sellers"
-                className="card group flex items-start gap-3 p-4 transition hover:shadow-lift"
+                className="card group flex items-start gap-3 p-4 transition hover:-translate-y-1 hover:shadow-lift"
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-steel-50 text-steel-600">
-                  <Store size={20} />
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600 ring-1 ring-brand-100 transition-transform group-hover:scale-110">
+                  <Store size={20} strokeWidth={1.75} />
                 </span>
                 <span>
                   <span className="block font-semibold text-ink">I&apos;m a 3D print seller</span>
@@ -96,10 +104,10 @@ export default function Home() {
               </Link>
               <Link
                 to="/estimator"
-                className="card group flex items-start gap-3 p-4 transition hover:shadow-lift"
+                className="card group flex items-start gap-3 p-4 transition hover:-translate-y-1 hover:shadow-lift"
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
-                  <User size={20} />
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600 ring-1 ring-brand-100 transition-transform group-hover:scale-110">
+                  <User size={20} strokeWidth={1.75} />
                 </span>
                 <span>
                   <span className="block font-semibold text-ink">I need a model printed</span>
@@ -115,8 +123,8 @@ export default function Home() {
 
           {/* Right: animated preview */}
           <div className="flex justify-center lg:justify-end">
-            <div className="relative">
-              <div className="absolute -inset-8 -z-10 rounded-full bg-brand-500/10 blur-3xl" />
+            <div className="relative animate-float">
+              <div className="absolute -inset-8 -z-10 rounded-full bg-brand-500/15 blur-3xl" />
               <JobStatusPreview />
             </div>
           </div>
@@ -133,10 +141,11 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.05 }}
-              className="card p-5"
+              whileHover={{ y: -6 }}
+              className="group card p-5"
             >
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-steel-50 text-steel-600">
-                <t.icon size={20} />
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-50 text-brand-600 ring-1 ring-brand-100 transition-transform duration-300 group-hover:scale-110">
+                <t.icon size={22} strokeWidth={1.75} />
               </span>
               <h3 className="mt-3 font-sans text-base font-semibold text-ink">{t.title}</h3>
               <p className="mt-1 text-sm text-ink-soft">{t.text}</p>
@@ -165,13 +174,14 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.45, delay: i * 0.08 }}
+              whileHover={{ y: -6 }}
               className="relative card p-6"
             >
-              <span className="absolute right-5 top-4 font-display text-4xl font-semibold text-ink/[0.06]">
+              <span className="absolute right-5 top-4 font-display text-4xl font-semibold text-brand-500/15">
                 {i + 1}
               </span>
-              <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-ink text-paper-light">
-                <s.icon size={22} />
+              <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-50 text-brand-600 ring-1 ring-brand-100">
+                <s.icon size={30} strokeWidth={1.6} className={s.anim} />
               </span>
               <h3 className="mt-4 font-sans text-lg font-semibold text-ink">{s.title}</h3>
               <p className="mt-1.5 text-sm text-ink-soft">{s.text}</p>
@@ -190,6 +200,11 @@ export default function Home() {
       <section className="section py-10">
         <motion.div {...reveal} className="relative overflow-hidden rounded-3xl bg-ink p-8 text-paper-light sm:p-12">
           <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-brand-500/25 blur-3xl" />
+          <Cog
+            size={300}
+            strokeWidth={1}
+            className="pointer-events-none absolute -bottom-24 -right-16 animate-spin-slow text-white/[0.04]"
+          />
           <div className="relative grid items-center gap-8 lg:grid-cols-2">
             <div>
               <span className="chip bg-brand-500/20 text-brand-200">For 3D print sellers</span>

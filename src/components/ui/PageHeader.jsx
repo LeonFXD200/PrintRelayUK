@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
  */
 export default function PageHeader({ eyebrow, title, subtitle, children }) {
   return (
-    <div className="relative overflow-hidden border-b border-ink/10 bg-paper-light">
+    <div className="relative overflow-hidden border-b border-ink/10 bg-gradient-to-b from-brand-50/60 to-paper-light">
       {/* faint grid backdrop */}
       <div className="pointer-events-none absolute inset-0 bg-grid-faint [background-size:42px_42px] opacity-60" />
       <div className="section relative py-14 sm:py-20">

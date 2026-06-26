@@ -20,10 +20,10 @@
 
   body {
     @apply bg-paper text-ink-light antialiased font-sans;
-    /* very faint cool wash so large flat areas keep a little depth */
+    /* very faint azure wash so large flat areas keep a little depth */
     background-image:
-      radial-gradient(1100px 520px at 88% -10%, rgba(27, 81, 240, 0.06), transparent 60%),
-      radial-gradient(900px 480px at -6% 2%, rgba(15, 23, 42, 0.04), transparent 55%);
+      radial-gradient(1100px 520px at 88% -10%, rgba(46, 134, 240, 0.08), transparent 60%),
+      radial-gradient(900px 480px at -6% 2%, rgba(20, 35, 63, 0.04), transparent 55%);
     background-attachment: fixed;
   }
 
@@ -38,7 +38,7 @@
   }
 
   ::selection {
-    background: rgba(27, 81, 240, 0.18);
+    background: rgba(46, 134, 240, 0.2);
   }
 
   :focus-visible {
