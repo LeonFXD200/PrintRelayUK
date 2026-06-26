@@ -18,6 +18,8 @@ import {
   Plus,
   Minus,
   Layers3,
+  ChevronDown,
+  RotateCcw,
 } from 'lucide-react'
 
 import PageHeader from '../components/ui/PageHeader.jsx'
@@ -91,11 +93,37 @@ function makeBoxPositions(w, h, d) {
 
 // Per-file volume (cm³) used for the estimate: real parse if available, else a
 // file-size proxy for formats we can't preview (3MF/OBJ).
+// For STL files with a real volume, apply cubic scaling: doubling a linear
+// dimension multiplies volume by 8.
 function fileVolume(f) {
   if (f.parseState === 'error') return 0
-  if (f.geometry?.volumeCm3) return f.geometry.volumeCm3
+  const s = f.scale ?? 1
+  if (f.geometry?.volumeCm3) return f.geometry.volumeCm3 * s ** 3
   if (f.size) return estimateVolumeFromFileSize(f.size)
   return 0
+}
+
+// Sanity warnings shown inside the dimension editor for a given file entry.
+// Pure function — no component state needed.
+function getDimWarnings(f) {
+  if (!f.geometry) return []
+  const { dimensions, volumeCm3 } = f.geometry
+  const { x, y, z } = dimensions
+  const s = f.scale ?? 1
+  const warnings = []
+  const scaledMax = Math.max(x, y, z) * s
+  if (scaledMax < 1 || scaledMax > 999) {
+    warnings.push(
+      'Dimensions look unusual — verify your CAD export uses millimetres.',
+    )
+  }
+  const bboxVolCm3 = (x * y * z) / 1000
+  if (bboxVolCm3 > 0 && volumeCm3 > bboxVolCm3 * 1.01) {
+    warnings.push(
+      'Volume may be inaccurate — the model may have open faces or mesh errors.',
+    )
+  }
+  return warnings
 }
 
 /**
@@ -136,6 +164,12 @@ export default function Estimator() {
   // ----- save-as-draft state -----
   const [savingDraft, setSavingDraft] = useState(false)
   const [savedDraft, setSavedDraft] = useState(null) // saved estimate
+
+  // ----- dimension editor state -----
+  // Which file's scaling panel is open (null = all closed).
+  const [expandedScaleId, setExpandedScaleId] = useState(null)
+  // The dimension input currently being edited: { id, axis, value }.
+  const [dimDraft, setDimDraft] = useState(null)
 
   const material = getMaterial(materialId)
   const printer = getPrinter(printerId)
@@ -207,6 +241,7 @@ export default function Estimator() {
         geometry: null,
         parseState: !known ? 'error' : ext === '.stl' ? 'parsing' : 'unsupported',
         qty: 1,
+        scale: 1,
       }
       setFiles((prev) => [...prev, entry])
       if (!activeId && known) setActiveId(id)
@@ -242,6 +277,7 @@ export default function Estimator() {
         },
         parseState: 'done',
         qty: 1,
+        scale: 1,
       },
     ])
     setActiveId(id)
@@ -258,6 +294,10 @@ export default function Estimator() {
 
   function setQty(id, qty) {
     updateFile(id, { qty: Math.min(1000, Math.max(1, qty || 1)) })
+  }
+
+  function setScale(id, newScale) {
+    updateFile(id, { scale: Math.min(100, Math.max(0.01, newScale)) })
   }
 
   function clearAll() {
@@ -434,6 +474,7 @@ export default function Estimator() {
                     <ModelViewer
                       positions={activeFile?.geometry?.positions}
                       colour={colourToHex(colour)}
+                      scale={activeFile?.scale ?? 1}
                     />
                   </Suspense>
                 </ErrorBoundary>
@@ -489,9 +530,36 @@ export default function Estimator() {
                               <span>{formatBytes(f.size)}</span>
                               {f.geometry && (
                                 <>
-                                  <span className="inline-flex items-center gap-1">
-                                    <Ruler size={12} /> {formatDims(f.geometry.dimensions)}
-                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      setExpandedScaleId((cur) =>
+                                        cur === f.id ? null : f.id,
+                                      )
+                                    }
+                                    className={`inline-flex items-center gap-1 rounded transition hover:text-ink ${
+                                      expandedScaleId === f.id ? 'text-brand-600' : ''
+                                    }`}
+                                    aria-label="Edit dimensions and scale"
+                                  >
+                                    <Ruler size={12} />
+                                    {formatDims({
+                                      x: f.geometry.dimensions.x * (f.scale ?? 1),
+                                      y: f.geometry.dimensions.y * (f.scale ?? 1),
+                                      z: f.geometry.dimensions.z * (f.scale ?? 1),
+                                    })}
+                                    {(f.scale ?? 1) !== 1 && (
+                                      <span className="text-brand-600">
+                                        ({parseFloat((f.scale ?? 1).toFixed(2))}×)
+                                      </span>
+                                    )}
+                                    <ChevronDown
+                                      size={11}
+                                      className={`transition-transform ${
+                                        expandedScaleId === f.id ? 'rotate-180' : ''
+                                      }`}
+                                    />
+                                  </button>
                                   <span className="inline-flex items-center gap-1">
                                     <Triangle size={12} />
                                     {f.geometry.triangleCount.toLocaleString()}
@@ -561,6 +629,90 @@ export default function Estimator() {
                           >
                             <X size={16} />
                           </button>
+
+                          {/* Dimension editor — STL only, toggled by clicking the dims chip */}
+                          {f.geometry && expandedScaleId === f.id && (
+                            <div className="w-full border-t border-ink/[0.06] pt-3">
+                              <div className="mb-2 flex items-center justify-between">
+                                <p className="text-xs font-semibold uppercase tracking-wide text-ink-soft">
+                                  Proportional scaling
+                                </p>
+                                {(f.scale ?? 1) !== 1 && (
+                                  <button
+                                    type="button"
+                                    onClick={() => setScale(f.id, 1)}
+                                    className="inline-flex items-center gap-1 text-xs text-ink-soft hover:text-ink"
+                                  >
+                                    <RotateCcw size={11} /> Reset to original
+                                  </button>
+                                )}
+                              </div>
+
+                              <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                                {['x', 'y', 'z'].map((axis) => {
+                                  const base = f.geometry.dimensions[axis]
+                                  const computed = (base * (f.scale ?? 1)).toFixed(2)
+                                  const isDrafting =
+                                    dimDraft?.id === f.id && dimDraft?.axis === axis
+                                  return (
+                                    <div key={axis}>
+                                      <label className="mb-1 block text-xs font-medium text-ink-soft">
+                                        {axis.toUpperCase()} (mm)
+                                      </label>
+                                      <div className="flex items-center overflow-hidden rounded-lg border border-ink/20 bg-white">
+                                        <input
+                                          type="number"
+                                          min={0.01}
+                                          step={0.1}
+                                          value={isDrafting ? dimDraft.value : computed}
+                                          onFocus={() =>
+                                            setDimDraft({ id: f.id, axis, value: computed })
+                                          }
+                                          onChange={(e) =>
+                                            setDimDraft((d) =>
+                                              d ? { ...d, value: e.target.value } : null,
+                                            )
+                                          }
+                                          onBlur={() => {
+                                            const parsed = parseFloat(dimDraft?.value)
+                                            if (
+                                              dimDraft &&
+                                              Number.isFinite(parsed) &&
+                                              parsed > 0 &&
+                                              base > 0
+                                            ) {
+                                              setScale(f.id, parsed / base)
+                                            }
+                                            setDimDraft(null)
+                                          }}
+                                          onKeyDown={(e) => {
+                                            if (e.key === 'Enter') e.currentTarget.blur()
+                                            if (e.key === 'Escape') {
+                                              setDimDraft(null)
+                                              e.currentTarget.blur()
+                                            }
+                                          }}
+                                          className="min-w-0 flex-1 border-none bg-transparent py-2 pl-2 pr-1 text-sm text-ink [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                                          aria-label={`${axis.toUpperCase()} dimension in mm`}
+                                        />
+                                        <span className="pr-2 text-xs text-ink-soft">mm</span>
+                                      </div>
+                                    </div>
+                                  )
+                                })}
+                              </div>
+
+                              {getDimWarnings(f).map((w) => (
+                                <p
+                                  key={w}
+                                  className="mt-2 flex items-start gap-1.5 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-700"
+                                >
+                                  <AlertTriangle size={12} className="mt-0.5 shrink-0" />
+                                  {w}
+                                </p>
+                              ))}
+                            </div>
+                          )}
                         </li>
                       )
                     })}

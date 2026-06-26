@@ -8,7 +8,7 @@ import { Box } from 'lucide-react'
  * Auto-centres, scales to fit, lights the scene and enables orbit controls.
  * Falls back to a placeholder when no geometry is available (e.g. 3MF/OBJ).
  */
-export default function ModelViewer({ positions, colour = '#3b6cff' }) {
+export default function ModelViewer({ positions, colour = '#3b6cff', scale = 1 }) {
   const mountRef = useRef(null)
 
   useEffect(() => {
@@ -63,6 +63,10 @@ export default function ModelViewer({ positions, colour = '#3b6cff' }) {
     wire.rotation.x = -Math.PI / 2
     scene.add(wire)
 
+    // Apply uniform scale so the viewer reflects user-adjusted dimensions.
+    mesh.scale.set(scale, scale, scale)
+    wire.scale.set(scale, scale, scale)
+
     // --- lighting ---
     scene.add(new THREE.AmbientLight(0xffffff, 0.55))
     const key = new THREE.DirectionalLight(0xffffff, 1.1)
@@ -73,12 +77,13 @@ export default function ModelViewer({ positions, colour = '#3b6cff' }) {
     scene.add(rim)
 
     // ground grid for scale
-    const grid = new THREE.GridHelper(maxDim * 2.4, 16, 0x94a3b8, 0xcbd5e1)
-    grid.position.y = -size.y / 2 - maxDim * 0.02
+    const scaledMax = maxDim * scale
+    const grid = new THREE.GridHelper(scaledMax * 2.4, 16, 0x94a3b8, 0xcbd5e1)
+    grid.position.y = -(size.y * scale) / 2 - scaledMax * 0.02
     scene.add(grid)
 
     // --- camera framing ---
-    camera.position.set(maxDim * 1.4, maxDim * 1.1, maxDim * 1.6)
+    camera.position.set(scaledMax * 1.4, scaledMax * 1.1, scaledMax * 1.6)
     camera.lookAt(0, 0, 0)
 
     const controls = new OrbitControls(camera, renderer.domElement)
@@ -121,7 +126,7 @@ export default function ModelViewer({ positions, colour = '#3b6cff' }) {
         mount.removeChild(renderer.domElement)
       }
     }
-  }, [positions, colour])
+  }, [positions, colour, scale])
 
   if (!positions) {
     return (
