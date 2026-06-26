@@ -1,4 +1,4 @@
-import{r as na,j as ci,B as Zo}from"./index-mJQ98gvg.js";/**
+import{r as na,j as ci,B as Zo}from"./index-DxMq52qw.js";/**
  * @license
  * Copyright 2010-2024 Three.js Authors
  * SPDX-License-Identifier: MIT

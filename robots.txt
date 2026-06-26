@@ -1,5 +1,4 @@
-# PrintRelay UK — allow all crawlers
 User-agent: *
 Allow: /
 
-Sitemap: https://leonfxd200.github.io/PrintRelayUK/sitemap.xml
+Sitemap: https://printrelay.co.uk/sitemap.xml
