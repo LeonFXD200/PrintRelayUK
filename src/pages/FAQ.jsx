@@ -4,58 +4,100 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 import PageHeader from '../components/ui/PageHeader.jsx'
 
-const FAQS = [
+const FAQ_GROUPS = [
   {
-    q: 'Can I upload STL files?',
-    a: 'Yes. STL is fully supported and gets a live 3D preview plus a real volume-based estimate. We also accept 3MF and OBJ, which are estimated from the file and confirmed after a quick review.',
+    heading: 'Files & Models',
+    faqs: [
+      {
+        q: 'What file types do you accept?',
+        a: 'We accept STL, 3MF and OBJ files. STL is the most widely used format for FDM printing and receives a live 3D preview and an instant volume-based estimate in our tool. 3MF and OBJ files are also fully supported and receive an automatic estimate on upload, confirmed after a brief file review before printing begins.',
+      },
+      {
+        q: 'Can I change the size or scale of my model?',
+        a: 'Yes. The estimator includes a scale control that lets you resize your model before placing an order. Adjusting the scale automatically updates the volume, estimated weight, print time and price. If you need a precise final size in millimetres, you can enter the target dimensions and the tool will calculate the correct scale factor.',
+      },
+      {
+        q: 'How accurate is the instant price estimate?',
+        a: "The instant estimate is a transparent, volume-based approximation designed to let you budget before committing. It uses your model's volume, the selected material and a simplified print-time model. Real geometry, support structures and optimal print orientation can affect actual material use and time, so final pricing is confirmed after file review. We will always notify you before proceeding if the confirmed price differs meaningfully from the estimate.",
+      },
+    ],
   },
   {
-    q: 'Can you ship directly to my customer?',
-    a: 'Yes. Turn on "Ship direct to customer" in the estimator. We post straight to your buyer, so you never have to handle the parcel.',
+    heading: 'Materials & Colours',
+    faqs: [
+      {
+        q: 'What materials do you offer?',
+        a: 'We currently offer PLA, PLA+, PETG, ABS, ASA and TPU. PLA and PLA+ suit the majority of everyday models and decorative prints. PETG adds durability and moisture resistance for functional parts. ABS and ASA handle higher temperatures and outdoor environments. TPU is our flexible option for prints that need to bend or compress. See the Materials page for a full breakdown of strengths, finishes and recommended uses.',
+      },
+      {
+        q: 'What colours are available?',
+        a: 'We stock a practical range of colours across each material, including black, white, grey, red, blue, green and others. Availability varies by material and is shown when you configure your order. If you need a specific colour that is not listed, get in touch and we will let you know what we can source.',
+      },
+    ],
   },
   {
-    q: 'Will your branding be on the parcel?',
-    a: 'No. With white-label packaging selected, there is no PrintRelay branding on the parcel, paperwork or insert. It is neutral and unbranded.',
+    heading: 'Pricing & Orders',
+    faqs: [
+      {
+        q: 'Do you work with personal customers, businesses and bulk orders?',
+        a: 'Yes — we work with all three. Whether you need a single model printed for personal use, regular overflow capacity as a 3D print seller or farm, or a larger batch run for a product launch, we can accommodate it. Bulk and repeat orders can be discussed directly via our contact page.',
+      },
+      {
+        q: 'Is the instant estimate the final price I will pay?',
+        a: "The instant estimate is a fast, indicative price based on your model's volume and the options you select. Final pricing is confirmed after we review your file, as support structures, infill settings and print orientation can all affect actual material use and print time. We will contact you if the confirmed price differs from the estimate before your order proceeds.",
+      },
+      {
+        q: 'Can I reorder the same job?',
+        a: 'Yes. Previous jobs in your dashboard include a one-click reorder option, so you can repeat a product without re-uploading the file or reconfiguring your settings each time.',
+      },
+    ],
   },
   {
-    q: 'Do you reuse uploaded files?',
-    a: 'Never. Files are used solely to quote, print and fulfil your specific order. They are not reused, resold, shared or printed for anyone else.',
+    heading: 'Dispatch & Delivery',
+    faqs: [
+      {
+        q: 'How long does it take to print and dispatch my order?',
+        a: 'Print time depends on the size, complexity and material of your model. We offer standard, priority and express dispatch tiers, with estimated turnaround windows shown at checkout based on our current queue. We work to keep dispatch on schedule but do not guarantee specific production windows, as print times can vary with model complexity.',
+      },
+      {
+        q: 'How is my order delivered?',
+        a: 'Orders are dispatched via tracked UK courier services. Estimated delivery windows depend on the dispatch tier you select at checkout. We currently fulfil UK orders only and do not offer international shipping at this time.',
+      },
+      {
+        q: 'Can you ship directly to my customer?',
+        a: "Yes. The estimator includes a customer-direct dispatch option. When selected, we post the finished prints straight to your buyer's address. Combined with white-label packaging, your customer receives their order with no PrintRelay branding anywhere on the parcel.",
+      },
+      {
+        q: 'Will PrintRelay branding appear on the parcel?',
+        a: 'No. When white-label dispatch is selected, parcels are sent in plain, unbranded packaging. There is no PrintRelay marking on the box, shipping label or any paperwork inside. Your brand stays front and centre.',
+      },
+    ],
   },
   {
-    q: 'How accurate is the estimate?',
-    a: 'It is a fast, transparent approximation based on model volume, material and a simplified print-time model, not a full slice. Geometry, supports and orientation affect the real figures, so we confirm the final price after file review.',
+    heading: 'Copyright & File Handling',
+    faqs: [
+      {
+        q: 'Can you print copyrighted or licensed models?',
+        a: 'Only if you own the design, hold a valid licence, or have explicit written permission from the rights holder. By uploading a file you confirm you have the right to have it reproduced. We may decline files that appear to contain unlicensed intellectual property, trademarked characters, weapon-related designs or other unsuitable content. Please see our File Responsibility page for full details.',
+      },
+      {
+        q: 'Is my uploaded file kept private?',
+        a: 'Yes. Uploaded files are used solely to quote, print and fulfil your specific order. They are never reused, resold, shared with third parties, or printed for anyone other than the customer who submitted the order.',
+      },
+    ],
   },
   {
-    q: 'What materials do you offer?',
-    a: 'PLA, PLA+, PETG, ABS, ASA and TPU. That range covers the vast majority of seller and maker jobs. See the Materials page for strengths and use cases.',
-  },
-  {
-    q: 'Can you print copyrighted models?',
-    a: 'Only if you own the design or have permission. We may reject files that appear copyrighted, branded without permission, weapon-related, explicit or otherwise unsuitable. See our File Responsibility page.',
-  },
-  {
-    q: 'What happens if the print fails?',
-    a: 'A small failure-risk allowance is built into every quote. If a print fails on our side, we re-print it, so you are not charged again for our mistakes.',
-  },
-  {
-    q: 'Can I reorder the same job?',
-    a: 'Yes. Previous jobs in your dashboard have a one-click Reorder button, ideal for repeat products.',
-  },
-  {
-    q: 'Is this for businesses only?',
-    a: 'No. We serve both sellers and print farms needing overflow capacity, and everyday customers who just want a single model printed.',
-  },
-  {
-    q: 'Do you offer sanding or painting?',
-    a: 'For now we focus on print-only fulfilment so we can keep quality and turnaround consistent. Finishing may be available later or by special request, so get in touch.',
-  },
-  {
-    q: 'Can I use this if my printer breaks?',
-    a: 'Absolutely, that is a core use case. Send us the overflow while you repair your machine and keep your orders shipping on time.',
-  },
-  {
-    q: 'Can I use this for Etsy orders?',
-    a: 'Yes. White-label packaging and customer-direct dispatch are designed exactly for Etsy, eBay and TikTok sellers.',
+    heading: 'After Your Order',
+    faqs: [
+      {
+        q: 'What if there is an issue with my print?',
+        a: 'If you believe there is a quality issue with your order, contact us with your order or quote reference number, the file name, a clear description of the problem and photos where possible. We review every quality complaint promptly and will arrange a reprint for defects that are clearly on our side.',
+      },
+      {
+        q: 'Do you offer refunds on custom prints?',
+        a: "Because every print is made to order from the file you supply, we are unable to offer refunds for prints that match the specification you submitted. If a print fails due to a quality defect on our side — such as poor layer adhesion or a structural failure unrelated to the model design — we will reprint it at no additional charge. We do not offer refunds where a print accurately reproduces a file that has design limitations such as thin walls, unsupported overhangs or a scale that makes the model inherently fragile.",
+      },
+    ],
   },
 ]
 
@@ -89,23 +131,39 @@ function Item({ faq, open, onToggle }) {
   )
 }
 
-/**
- * FAQ page — an accordion of common customer and seller questions.
- */
 export default function FAQ() {
-  const [open, setOpen] = useState(0)
+  const [open, setOpen] = useState(null)
+
+  function toggle(q) {
+    setOpen((prev) => (prev === q ? null : q))
+  }
+
   return (
     <div>
       <PageHeader
         eyebrow="FAQ"
         title="Questions, answered"
-        subtitle="Everything sellers and makers usually ask before sending us their first job."
+        subtitle="Everything sellers, makers and personal customers usually ask before their first order."
       />
-      <section className="section grid gap-3 py-12 lg:grid-cols-2">
-        {FAQS.map((faq, i) => (
-          <Item key={faq.q} faq={faq} open={open === i} onToggle={() => setOpen(open === i ? -1 : i)} />
+
+      <div className="section py-12 space-y-10">
+        {FAQ_GROUPS.map((group) => (
+          <div key={group.heading}>
+            <div className="mb-4 flex items-center gap-3">
+              <h2 className="font-sans text-sm font-semibold uppercase tracking-wider text-ink-soft">
+                {group.heading}
+              </h2>
+              <div className="h-px flex-1 bg-ink/10" />
+            </div>
+            <div className="grid gap-3 lg:grid-cols-2">
+              {group.faqs.map((faq) => (
+                <Item key={faq.q} faq={faq} open={open === faq.q} onToggle={() => toggle(faq.q)} />
+              ))}
+            </div>
+          </div>
         ))}
-      </section>
+      </div>
+
       <section className="section pb-14">
         <div className="card p-8 text-center">
           <h3 className="text-xl font-semibold text-ink">Still have a question?</h3>

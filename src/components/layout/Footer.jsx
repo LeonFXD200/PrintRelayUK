@@ -53,10 +53,13 @@ export default function Footer() {
           </p>
           <div className="mt-5 space-y-2 text-sm text-paper/70">
             <p className="flex items-center gap-2">
-              <Mail size={15} className="text-brand-300" /> hello@printrelay.uk
+              <Mail size={15} className="text-brand-300" />
+              <a href="mailto:printrelayuk@gmail.com" className="transition-colors hover:text-brand-300">
+                printrelayuk@gmail.com
+              </a>
             </p>
             <p className="flex items-center gap-2">
-              <MapPin size={15} className="text-brand-300" /> Manchester, United Kingdom
+              <MapPin size={15} className="text-brand-300" /> Sevenoaks, Kent, United Kingdom
             </p>
             <p className="flex items-center gap-2">
               <ShieldCheck size={15} className="text-brand-300" /> Confidential file handling

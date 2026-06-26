@@ -12,6 +12,7 @@ const NAV_LINKS = [
   { to: '/materials', label: 'Materials' },
   { to: '/sellers', label: 'For sellers' },
   { to: '/faq', label: 'FAQ' },
+  { to: '/contact', label: 'Contact' },
 ]
 
 // Brand wordmark — a small ink monogram tile plus the name.
