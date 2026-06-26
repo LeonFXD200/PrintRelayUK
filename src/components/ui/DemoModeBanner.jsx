@@ -2,10 +2,6 @@ import { useState } from 'react'
 import { Info, X } from 'lucide-react'
 import { isSupabaseConfigured } from '../../lib/supabaseClient.js'
 
-/**
- * Thin banner shown only in demo/mock mode (no Supabase keys configured),
- * so portfolio viewers immediately understand the data is mocked.
- */
 export default function DemoModeBanner() {
   const [hidden, setHidden] = useState(false)
   if (isSupabaseConfigured || hidden) return null
@@ -15,10 +11,7 @@ export default function DemoModeBanner() {
       <div className="section flex items-center justify-between gap-3 py-2 text-xs text-steel-800">
         <p className="flex items-center gap-2">
           <Info size={14} className="shrink-0 text-steel-600" />
-          <span>
-            <strong className="font-semibold">Demo mode.</strong> Sample data, no real backend. Try
-            the demo logins on the sign-in page (customer, seller or admin).
-          </span>
+          <span>Instant estimates. Final pricing confirmed after file review.</span>
         </p>
         <button
           onClick={() => setHidden(true)}

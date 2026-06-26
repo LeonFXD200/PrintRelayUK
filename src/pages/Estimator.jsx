@@ -20,6 +20,7 @@ import {
   Layers3,
   ChevronDown,
   RotateCcw,
+  Mail,
 } from 'lucide-react'
 
 import PageHeader from '../components/ui/PageHeader.jsx'
@@ -126,11 +127,73 @@ function getDimWarnings(f) {
   return warnings
 }
 
+function buildMailtoHref({ files, material, colour, layerHeight, infill, printer, dispatchId, shippingId, whiteLabel, shipDirect, urgent, postcode, estimate }) {
+  const fileLines = files.map((f) => {
+    const s = f.scale ?? 1
+    const dimsStr = f.geometry
+      ? formatDims({ x: f.geometry.dimensions.x * s, y: f.geometry.dimensions.y * s, z: f.geometry.dimensions.z * s })
+      : null
+    const scalePart = s !== 1 ? ` (scaled ${parseFloat(s.toFixed(2))}×)` : ''
+    return `  • ${f.name}  qty: ${f.qty}${dimsStr ? `  dims: ${dimsStr}${scalePart}` : ''}`
+  }).join('\n')
+
+  const dispatch = dispatchOptions.find((d) => d.id === dispatchId)
+  const shipping = shippingMethods.find((s) => s.id === shippingId)
+
+  const hrs = estimate.estimatedHours
+  const hh = Math.floor(hrs)
+  const mm = Math.round((hrs - hh) * 60)
+  const printTime = hh > 0 ? `${hh} h ${mm} min` : `${mm} min`
+
+  const lines = [
+    'Hi PrintRelay,',
+    '',
+    "I'd like a reviewed quote for the following 3D print job.",
+    '',
+    '--- FILES ---',
+    fileLines,
+    '',
+    '*** IMPORTANT: I will attach my STL / 3MF / OBJ file(s) to this email before sending. ***',
+    '',
+    '--- PRINT SETTINGS ---',
+    `Material:          ${material.name}`,
+    `Colour:            ${colour}`,
+    `Layer height:      ${layerHeight} mm`,
+    `Infill:            ${infill}%`,
+    `Printer profile:   ${printer.name}`,
+    '',
+    '--- DELIVERY ---',
+    `Dispatch speed:    ${dispatch ? `${dispatch.name}${dispatch.window ? ` (${dispatch.window})` : ''}` : dispatchId}`,
+    `Shipping:          ${shipping ? `${shipping.name}${shipping.eta ? ` · ${shipping.eta}` : ''}` : shippingId}`,
+    postcode ? `Delivery postcode: ${postcode}` : null,
+    `White-label:       ${whiteLabel ? 'Yes' : 'No'}`,
+    `Ship direct:       ${shipDirect ? 'Yes' : 'No'}`,
+    `Urgent:            ${urgent ? 'Yes' : 'No'}`,
+    '',
+    '--- ESTIMATE SUMMARY ---',
+    `Weight:            ~${estimate.estimatedGrams} g`,
+    `Print time:        ~${printTime}`,
+    `Estimated total:   £${estimate.total.toFixed(2)} inc. shipping`,
+    '',
+    'Additional notes: (add any special requirements here)',
+    '',
+    '---',
+    'NOTE: The figure above is an online estimate only.',
+    'Final pricing is confirmed after file review and may change based on',
+    'actual geometry, material usage, or special requirements.',
+  ].filter((l) => l !== null).join('\n')
+
+  const subject = files.length === 1
+    ? `Quote request: ${files[0].name}`
+    : `Quote request: ${files[0].name} + ${files.length - 1} more`
+
+  return `mailto:printrelayuk@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines)}`
+}
+
 /**
  * Estimator page — the core flow. Handles multi-file upload + STL parsing, a
- * live 3D preview of the selected part, shared print options, a continuously
- * recomputed combined quote, and either saving a draft or submitting a quote
- * request via the mock data layer.
+ * live 3D preview of the selected part, shared print options, and a
+ * continuously recomputed combined quote.
  */
 export default function Estimator() {
   const { user } = useAuth()
@@ -392,6 +455,34 @@ export default function Estimator() {
     } finally {
       setSavingDraft(false)
     }
+  }
+
+  // --------------------------------------------------------------------------
+  // Validate inputs then open the default email client with prefilled details.
+  // --------------------------------------------------------------------------
+  function handleRequestQuote() {
+    const errs = {}
+    if (!files.length) errs.file = 'Upload at least one model file first.'
+    if (!confirmOwnership) errs.confirm = 'Please confirm you own these files or have permission.'
+    if (postcode && !UK_POSTCODE.test(postcode.trim())) errs.postcode = 'Enter a valid UK postcode.'
+    setErrors(errs)
+    if (Object.keys(errs).length) return
+
+    window.location.href = buildMailtoHref({
+      files,
+      material,
+      colour,
+      layerHeight,
+      infill,
+      printer,
+      dispatchId,
+      shippingId,
+      whiteLabel,
+      shipDirect,
+      urgent,
+      postcode: postcode.trim(),
+      estimate,
+    })
   }
 
   // --------------------------------------------------------------------------
@@ -884,22 +975,16 @@ export default function Estimator() {
                   {errors.file && <p className="text-xs text-red-600">{errors.file}</p>}
 
                   <button
-                    onClick={handleSubmit}
-                    disabled={submitting}
+                    type="button"
+                    onClick={handleRequestQuote}
                     className="btn-primary w-full py-3"
                   >
-                    {submitting ? (
-                      <>
-                        <Loader2 size={18} className="animate-spin" /> Submitting…
-                      </>
-                    ) : (
-                      <>
-                        Request quote / order <ArrowRight size={18} />
-                      </>
-                    )}
+                    <Mail size={18} /> Request a reviewed quote
                   </button>
                   <p className="text-center text-xs text-ink-soft">
-                    No payment taken now. We review the files and confirm the final price.
+                    Opens your email client with the estimate prefilled. Attach your STL / 3MF / OBJ
+                    file(s) before sending. Online figure is an estimate — final pricing confirmed
+                    after file review.
                   </p>
 
                   {/* Save as draft — no commitment, lands in the dashboard */}
@@ -938,46 +1023,6 @@ export default function Estimator() {
                 </div>
               )}
 
-              {/* Success state */}
-              <AnimatePresence>
-                {submitted && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.96 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="card overflow-hidden"
-                  >
-                    <div className="bg-emerald-600 p-5 text-white">
-                      <CheckCircle2 size={28} />
-                      <p className="mt-2 text-lg font-bold">Quote request received</p>
-                      <p className="text-sm text-emerald-50">Reference {submitted.id}</p>
-                    </div>
-                    <div className="space-y-3 p-5">
-                      <p className="text-sm text-ink-soft">
-                        We&apos;ll review your{' '}
-                        {submitted.file_count > 1 ? `${submitted.file_count} files` : 'file'} and
-                        confirm the final price. You can track this job from your dashboard.
-                      </p>
-                      <div className="flex gap-2">
-                        {user ? (
-                          <button
-                            onClick={() => navigate('/dashboard')}
-                            className="btn-primary flex-1 py-2.5"
-                          >
-                            View in dashboard
-                          </button>
-                        ) : (
-                          <Link to="/login" className="btn-primary flex-1 py-2.5">
-                            Sign in to track
-                          </Link>
-                        )}
-                        <button onClick={clearAll} className="btn-light flex-1 py-2.5">
-                          New estimate
-                        </button>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
             </div>
           </div>
         </div>
