@@ -1,27 +1,69 @@
 // Reusable, theme-consistent form controls (clean industrial / light theme).
+import { useId } from 'react'
 import { Check } from 'lucide-react'
 import { COLOUR_HEX } from '../../utils/colours.js'
 
-export function Select({ label, value, onChange, options, hint }) {
+// Small required-field marker, hidden from screen readers (aria-required carries
+// the semantics) but a clear visual cue.
+function Req({ show }) {
+  return show ? (
+    <span className="text-red-500" aria-hidden="true">
+      {' '}
+      *
+    </span>
+  ) : null
+}
+
+export function Select({ label, value, onChange, options, hint, required = false, name, placeholder, error }) {
+  const rid = useId()
+  const errId = `${rid}-err`
+  const hintId = `${rid}-hint`
+  const describedBy = [error && errId, hint && hintId].filter(Boolean).join(' ') || undefined
   return (
     <label className="block">
-      {label && <span className="field-label">{label}</span>}
+      {label && (
+        <span className="field-label">
+          {label}
+          <Req show={required} />
+        </span>
+      )}
       <select
-        className="field appearance-none bg-[length:12px] bg-[right_0.75rem_center] bg-no-repeat pr-9"
+        className={`field appearance-none bg-[length:12px] bg-[right_0.75rem_center] bg-no-repeat pr-9 ${
+          error ? 'border-red-400 focus:ring-red-500/20' : ''
+        }`}
         style={{
           backgroundImage:
             "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='3'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E\")",
         }}
         value={value}
+        name={name}
+        required={required}
+        aria-required={required || undefined}
+        aria-invalid={error ? 'true' : undefined}
+        aria-describedby={describedBy}
         onChange={(e) => onChange(e.target.value)}
       >
+        {placeholder && (
+          <option value="" disabled>
+            {placeholder}
+          </option>
+        )}
         {options.map((o) => (
           <option key={o.value} value={o.value}>
             {o.label}
           </option>
         ))}
       </select>
-      {hint && <span className="mt-1 block text-xs text-ink-soft">{hint}</span>}
+      {hint && !error && (
+        <span id={hintId} className="mt-1 block text-xs text-ink-soft">
+          {hint}
+        </span>
+      )}
+      {error && (
+        <span id={errId} role="alert" className="mt-1 block text-xs text-red-600">
+          {error}
+        </span>
+      )}
     </label>
   )
 }
@@ -50,18 +92,109 @@ export function NumberField({ label, value, onChange, min = 1, max = 1000, step 
   )
 }
 
-export function TextField({ label, value, onChange, placeholder, type = 'text', error }) {
+export function TextField({
+  label,
+  value,
+  onChange,
+  placeholder,
+  type = 'text',
+  error,
+  hint,
+  required = false,
+  name,
+  autoComplete,
+  inputMode,
+  max,
+}) {
+  const rid = useId()
+  const errId = `${rid}-err`
+  const hintId = `${rid}-hint`
+  const describedBy = [error && errId, hint && hintId].filter(Boolean).join(' ') || undefined
   return (
     <label className="block">
-      {label && <span className="field-label">{label}</span>}
+      {label && (
+        <span className="field-label">
+          {label}
+          <Req show={required} />
+        </span>
+      )}
       <input
         type={type}
+        name={name}
         className={`field ${error ? 'border-red-400 focus:ring-red-500/20' : ''}`}
         value={value}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
+        required={required}
+        autoComplete={autoComplete}
+        inputMode={inputMode}
+        maxLength={max}
+        aria-required={required || undefined}
+        aria-invalid={error ? 'true' : undefined}
+        aria-describedby={describedBy}
       />
-      {error && <span className="mt-1 block text-xs text-red-600">{error}</span>}
+      {hint && !error && (
+        <span id={hintId} className="mt-1 block text-xs text-ink-soft">
+          {hint}
+        </span>
+      )}
+      {error && (
+        <span id={errId} role="alert" className="mt-1 block text-xs text-red-600">
+          {error}
+        </span>
+      )}
+    </label>
+  )
+}
+
+/** Multi-line text field with the same label/hint/error wiring as TextField. */
+export function Textarea({
+  label,
+  value,
+  onChange,
+  placeholder,
+  error,
+  hint,
+  required = false,
+  name,
+  rows = 4,
+  max,
+}) {
+  const rid = useId()
+  const errId = `${rid}-err`
+  const hintId = `${rid}-hint`
+  const describedBy = [error && errId, hint && hintId].filter(Boolean).join(' ') || undefined
+  return (
+    <label className="block">
+      {label && (
+        <span className="field-label">
+          {label}
+          <Req show={required} />
+        </span>
+      )}
+      <textarea
+        name={name}
+        rows={rows}
+        maxLength={max}
+        className={`field resize-y ${error ? 'border-red-400 focus:ring-red-500/20' : ''}`}
+        value={value}
+        placeholder={placeholder}
+        onChange={(e) => onChange(e.target.value)}
+        required={required}
+        aria-required={required || undefined}
+        aria-invalid={error ? 'true' : undefined}
+        aria-describedby={describedBy}
+      />
+      {hint && !error && (
+        <span id={hintId} className="mt-1 block text-xs text-ink-soft">
+          {hint}
+        </span>
+      )}
+      {error && (
+        <span id={errId} role="alert" className="mt-1 block text-xs text-red-600">
+          {error}
+        </span>
+      )}
     </label>
   )
 }

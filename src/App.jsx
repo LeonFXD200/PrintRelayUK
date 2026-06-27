@@ -8,6 +8,7 @@ import { applyRouteMeta } from './utils/seo.js'
 // Pages
 import Home from './pages/Home.jsx'
 import Estimator from './pages/Estimator.jsx'
+import Quote from './pages/Quote.jsx'
 import HowItWorks from './pages/HowItWorks.jsx'
 import Pricing from './pages/Pricing.jsx'
 import Materials from './pages/Materials.jsx'
@@ -17,6 +18,7 @@ import AdminDashboard from './pages/AdminDashboard.jsx'
 import Auth from './pages/Auth.jsx'
 import FAQ from './pages/FAQ.jsx'
 import Terms from './pages/Terms.jsx'
+import Privacy from './pages/Privacy.jsx'
 import Contact from './pages/Contact.jsx'
 import NotFound from './pages/NotFound.jsx'
 
@@ -47,12 +49,14 @@ export default function App() {
         <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/estimator" element={<Estimator />} />
+        <Route path="/quote" element={<Quote />} />
         <Route path="/how-it-works" element={<HowItWorks />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/materials" element={<Materials />} />
         <Route path="/sellers" element={<SellerOverflow />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/terms" element={<Terms />} />
+        <Route path="/privacy" element={<Privacy />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Auth />} />
         <Route path="/register" element={<Auth defaultMode="register" />} />

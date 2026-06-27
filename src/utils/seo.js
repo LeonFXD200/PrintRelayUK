@@ -1,11 +1,22 @@
-// Per-route document title + meta description.
+// Per-route document metadata (title, description, canonical, robots, social tags).
 //
-// The app is a HashRouter SPA, so the server only ever returns index.html.
-// Updating <title> and the meta description on each navigation keeps browser
-// tabs, shared links and crawlers that execute JS in sync with the page — a
-// cheap, dependency-free win for SEO and UX.
+// IMPORTANT — this app uses HashRouter (client-side routing via the URL
+// fragment, e.g. /#/quote). Search engines strip the fragment, so the site is
+// effectively a SINGLE indexable URL: the homepage. These per-navigation updates
+// therefore keep the browser tab title and social-share previews in sync with
+// the active view — they do NOT turn hash routes into separately indexable
+// Google pages. (Genuinely per-page-indexable SEO would need clean paths on a
+// host that supports SPA rewrites — Cloudflare Pages / Netlify / Vercel — see
+// the README "Deploy & routing" section.)
 
 const SUFFIX = 'PrintRelay UK'
+const SITE_URL = 'https://printrelay.co.uk'
+const HOME_URL = `${SITE_URL}/`
+
+// Private / transactional views that must never be a search result. Marked
+// noindex. In a hash SPA they aren't distinct URLs anyway, but this is correct,
+// belt-and-braces, and future-proof if the site moves to clean-path hosting.
+const NOINDEX_ROUTES = new Set(['/quote', '/admin', '/login', '/register', '/dashboard'])
 
 // Keyed by route pathname (without the leading hash).
 const PAGE_META = {
@@ -18,6 +29,11 @@ const PAGE_META = {
     title: `Instant 3D Printing Quote — Upload STL, 3MF, OBJ | ${SUFFIX}`,
     description:
       'Upload one or more 3D models for an instant price. Live STL preview, real volume-based estimate, material and dispatch options — no account needed.',
+  },
+  '/quote': {
+    title: `Request a 3D Printing Quote | ${SUFFIX}`,
+    description:
+      'Tell us what you need printed and get a reviewed, fixed-price quote with lead time — usually within 1–2 working days. Upload your STL or describe the job. No account needed.',
   },
   '/how-it-works': {
     title: `How It Works — From File to Front Door | ${SUFFIX}`,
@@ -45,9 +61,14 @@ const PAGE_META = {
       'Answers about file formats, materials, lead times, white-label dispatch, file responsibility and how our instant estimates work.',
   },
   '/terms': {
-    title: `File Responsibility & Terms | ${SUFFIX}`,
+    title: `Terms of Service & File Responsibility | ${SUFFIX}`,
     description:
-      'How PrintRelay UK handles your files: used only to quote, print and fulfil your order — never reused, resold or shared.',
+      'PrintRelay UK terms of service and how we handle your files: used only to quote, print and fulfil your order — never reused, resold or shared.',
+  },
+  '/privacy': {
+    title: `Privacy Policy | ${SUFFIX}`,
+    description:
+      'How PrintRelay UK collects, uses and protects your personal information, in line with the UK GDPR and Data Protection Act 2018.',
   },
   '/contact': {
     title: `Contact PrintRelay UK | 3D Printing Enquiries`,
@@ -57,7 +78,7 @@ const PAGE_META = {
   '/login': { title: `Sign In | ${SUFFIX}`, description: 'Sign in to track your 3D printing jobs and saved estimates.' },
   '/register': { title: `Create an Account | ${SUFFIX}`, description: 'Create a PrintRelay UK account to track jobs and reorder.' },
   '/dashboard': { title: `Your Dashboard | ${SUFFIX}`, description: 'Track jobs, saved estimates and print preferences.' },
-  '/admin': { title: `Operations | ${SUFFIX}`, description: 'Print queue and operations dashboard.' },
+  '/admin': { title: `Operations | ${SUFFIX}`, description: 'Quote enquiries and the print queue.' },
 }
 
 const FALLBACK = {
@@ -65,16 +86,53 @@ const FALLBACK = {
   description: 'The page you were looking for could not be found.',
 }
 
-/** Update document.title and the meta description for the given pathname. */
-export function applyRouteMeta(pathname) {
-  const meta = PAGE_META[pathname] || (pathname === '/' ? PAGE_META['/'] : FALLBACK)
-  document.title = meta.title
-
-  let tag = document.querySelector('meta[name="description"]')
+// Upsert a <meta> tag identified by `name="…"` or `property="…"`.
+function setMeta(attr, key, content) {
+  let tag = document.head.querySelector(`meta[${attr}="${key}"]`)
   if (!tag) {
     tag = document.createElement('meta')
-    tag.setAttribute('name', 'description')
+    tag.setAttribute(attr, key)
     document.head.appendChild(tag)
   }
-  tag.setAttribute('content', meta.description)
+  tag.setAttribute('content', content)
+}
+
+// Upsert <link rel="canonical">.
+function setCanonical(href) {
+  let tag = document.head.querySelector('link[rel="canonical"]')
+  if (!tag) {
+    tag = document.createElement('link')
+    tag.setAttribute('rel', 'canonical')
+    document.head.appendChild(tag)
+  }
+  tag.setAttribute('href', href)
+}
+
+/**
+ * Sync document title, description, robots, canonical and social tags.
+ * Canonical / og:url always point at the homepage (the only indexable URL for a
+ * hash SPA); private/unknown routes are marked noindex.
+ */
+export function applyRouteMeta(pathname) {
+  const known = PAGE_META[pathname]
+  const meta = known || FALLBACK
+
+  document.title = meta.title
+  setMeta('name', 'description', meta.description)
+
+  // The fragment is invisible to crawlers, so the canonical document is always
+  // the homepage — we do NOT advertise hash URLs as canonical/indexable.
+  setCanonical(HOME_URL)
+  setMeta('property', 'og:url', HOME_URL)
+
+  // Per-view preview text (UX nicety for tabs / shares — not per-page indexing).
+  setMeta('property', 'og:title', meta.title)
+  setMeta('property', 'og:description', meta.description)
+  setMeta('name', 'twitter:title', meta.title)
+  setMeta('name', 'twitter:description', meta.description)
+
+  // Only known public marketing pages are indexable; private/transactional and
+  // unknown (404) views are noindex so they can never surface as a result.
+  const indexable = Boolean(known) && !NOINDEX_ROUTES.has(pathname)
+  setMeta('name', 'robots', indexable ? 'index, follow' : 'noindex, nofollow')
 }

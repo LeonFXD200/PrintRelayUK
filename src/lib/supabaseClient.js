@@ -6,11 +6,15 @@
 // DEMO / MOCK mode and `supabase` stays null. The data layer (mockDb.js) checks
 // `isSupabaseConfigured` to decide which path to use.
 //
-// To go live later:
+// To go live later (see README + supabase/README.md):
 //   1. Create a Supabase project.
-//   2. Run the SQL in README (profiles / jobs / saved_preferences / messages).
-//   3. Create a public storage bucket named `print-files`.
+//   2. Run the SQL migrations in supabase/migrations/.
+//   3. Deploy the `submit-enquiry` Edge Function.
 //   4. Put the URL + anon key in a `.env` file (see .env.example).
+//
+// The anon key is safe to expose in the browser. The service-role key, Resend
+// API key and Turnstile SECRET are NEVER in frontend code or VITE_ variables —
+// they exist only as Edge Function secrets on the server.
 
 import { createClient } from '@supabase/supabase-js'
 

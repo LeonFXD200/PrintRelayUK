@@ -10,14 +10,21 @@
 
 import { sampleJobs, sampleEstimates } from '../data/sampleJobs.js'
 import { samplePreferences, sampleCompany } from '../data/users.js'
-import { isSupabaseConfigured } from './supabaseClient.js'
+import { sampleEnquiries } from '../data/sampleEnquiries.js'
+import { DEFAULT_ENQUIRY_STATUS } from '../data/enquiryStatuses.js'
+import { DEMO_PERSIST_MAX_MB } from '../utils/validateQuote.js'
+import { isSupabaseConfigured, supabase } from './supabaseClient.js'
 
 const KEYS = {
   jobs: 'pr_jobs',
   estimates: 'pr_estimates',
   prefs: 'pr_prefs',
   company: 'pr_company',
+  enquiries: 'pr_enquiries',
 }
+
+// Supabase storage bucket for quote-enquiry uploads (created in the SQL migration).
+const ENQUIRY_BUCKET = 'enquiry-files'
 
 // --- tiny localStorage helpers ---------------------------------------------
 function load(key, seed) {
@@ -152,6 +159,157 @@ export async function saveCompany(userId, details) {
   all[userId] = { ...all[userId], ...details }
   save(KEYS.company, all)
   return all[userId]
+}
+
+// ---------------------------------------------------------------------------
+// QUOTE ENQUIRIES (from the /quote form)
+// ---------------------------------------------------------------------------
+// Lifecycle: new -> contacted -> quoted -> accepted | declined (enquiryStatuses.js).
+
+// Short, readable enquiry id (e.g. ENQ-1042).
+function newEnquiryId() {
+  const n = 1000 + Math.floor(performance.now() % 9000)
+  return `ENQ-${n}`
+}
+
+// Read a File into a base64 data URL (browser only). Used in DEMO mode so the
+// admin "download" works offline for small files.
+function fileToDataUrl(file) {
+  return new Promise((resolve) => {
+    if (typeof FileReader === 'undefined') return resolve(null)
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = () => resolve(null)
+    reader.readAsDataURL(file)
+  })
+}
+
+// Supabase: supabase.from('quote_enquiries').select('*').order('created_at',{ascending:false})
+export async function listEnquiries() {
+  await delay()
+  if (isSupabaseConfigured && supabase) {
+    const { data, error } = await supabase
+      .from('quote_enquiries')
+      .select('*')
+      .order('created_at', { ascending: false })
+    if (error) throw error
+    return data || []
+  }
+  const all = load(KEYS.enquiries, sampleEnquiries)
+  return [...all].sort((a, b) => (a.created_at < b.created_at ? 1 : -1))
+}
+
+// Create an enquiry.
+// LIVE: goes through the secure `submit-enquiry` Edge Function — the browser
+//       NEVER writes to the database or storage directly. The function validates
+//       server-side, verifies Turnstile, mints a one-time signed upload URL,
+//       inserts the row and sends emails. The file is then uploaded straight to
+//       the private bucket via that signed URL (no anon storage access).
+export async function createEnquiry({ file = null, turnstileToken = null, ...fields }) {
+  await delay()
+
+  // --------------------------- LIVE (Supabase) ---------------------------
+  if (isSupabaseConfigured && supabase) {
+    const fileMeta = file ? { name: file.name, type: file.type, size: file.size } : null
+
+    const { data, error } = await supabase.functions.invoke('submit-enquiry', {
+      body: {
+        enquiry: { ...fields, deadline: fields.deadline || null },
+        file: fileMeta,
+        turnstileToken,
+      },
+    })
+    if (error) throw new Error(error.message || 'Sorry — we could not submit your enquiry.')
+    if (!data?.ok) throw new Error('Sorry — we could not submit your enquiry. Please try again.')
+
+    // Upload the file directly to the private bucket using the one-time signed
+    // URL the function returned. Non-fatal: the enquiry is already saved.
+    if (data.upload && file) {
+      const { error: upErr } = await supabase.storage
+        .from(ENQUIRY_BUCKET)
+        .uploadToSignedUrl(data.upload.path, data.upload.token, file)
+      if (upErr) {
+        // eslint-disable-next-line no-console
+        console.warn('[PrintRelay UK] File upload failed (enquiry saved without file):', upErr.message)
+      }
+    }
+
+    return { id: data.id, reference: data.reference, status: DEFAULT_ENQUIRY_STATUS, ...fields }
+  }
+
+  // ------------------------------- DEMO ----------------------------------
+  // Persist metadata; for small files also keep a data URL so the admin
+  // download button works offline without a backend.
+  let file_data_url = null
+  let file_name = ''
+  let file_size = 0
+  if (file) {
+    file_name = file.name
+    file_size = file.size
+    if (file.size <= DEMO_PERSIST_MAX_MB * 1024 * 1024) {
+      file_data_url = await fileToDataUrl(file)
+    }
+  }
+
+  const record = {
+    id: newEnquiryId(),
+    status: DEFAULT_ENQUIRY_STATUS,
+    admin_notes: '',
+    file_url: null,
+    file_name,
+    file_size,
+    file_data_url,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    ...fields,
+  }
+
+  const all = load(KEYS.enquiries, sampleEnquiries)
+  try {
+    save(KEYS.enquiries, [record, ...all])
+  } catch {
+    // localStorage quota hit (large data URL) — retry without the inline file.
+    const slim = { ...record, file_data_url: null }
+    save(KEYS.enquiries, [slim, ...all])
+    return slim
+  }
+  return record
+}
+
+// Supabase: supabase.from('quote_enquiries').update(patch).eq('id', id)...
+export async function updateEnquiry(id, patch) {
+  await delay(160)
+  if (isSupabaseConfigured && supabase) {
+    const { data, error } = await supabase
+      .from('quote_enquiries')
+      .update({ ...patch, updated_at: new Date().toISOString() })
+      .eq('id', id)
+      .select()
+      .single()
+    if (error) throw error
+    return data
+  }
+  const all = load(KEYS.enquiries, sampleEnquiries)
+  const next = all.map((e) =>
+    e.id === id ? { ...e, ...patch, updated_at: new Date().toISOString() } : e,
+  )
+  save(KEYS.enquiries, next)
+  return next.find((e) => e.id === id)
+}
+
+// Resolve a downloadable URL for an enquiry's file.
+// - DEMO: returns the inline data URL if we kept one.
+// - LIVE: creates a short-lived signed URL from private storage.
+export async function getEnquiryFileUrl(enquiry) {
+  if (!enquiry) return null
+  if (isSupabaseConfigured && supabase && enquiry.file_url) {
+    const { data, error } = await supabase.storage
+      .from(ENQUIRY_BUCKET)
+      .createSignedUrl(enquiry.file_url, 60 * 10)
+    if (error) return null
+    return data?.signedUrl || null
+  }
+  return enquiry.file_data_url || null
 }
 
 // Reset the demo back to seed data (handy button on dashboards).

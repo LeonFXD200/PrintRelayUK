@@ -17,4 +17,10 @@ export default defineConfig({
     // three.js is fairly large; raise the warning limit so the build stays quiet.
     chunkSizeWarningLimit: 1200,
   },
+  // Vitest config (read only when running `npm test`; ignored by `vite build`).
+  test: {
+    environment: 'node',
+    include: ['src/**/*.test.{js,jsx}'],
+    setupFiles: ['./src/test/setup.js'],
+  },
 })

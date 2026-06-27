@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom'
-import { Mail, MapPin, ShieldCheck } from 'lucide-react'
+import { Mail, MapPin, ShieldCheck, Send } from 'lucide-react'
 
 const COLS = [
   {
     title: 'Service',
     links: [
       { to: '/estimator', label: 'Instant estimate' },
+      { to: '/quote', label: 'Request a quote' },
       { to: '/how-it-works', label: 'How it works' },
       { to: '/pricing', label: 'Pricing' },
       { to: '/materials', label: 'Materials' },
@@ -23,8 +24,9 @@ const COLS = [
   {
     title: 'Legal',
     links: [
-      { to: '/terms', label: 'File responsibility' },
       { to: '/terms', label: 'Terms of service' },
+      { to: '/terms', label: 'File responsibility' },
+      { to: '/privacy', label: 'Privacy policy' },
       { to: '/faq', label: 'Copyright policy' },
     ],
   },
@@ -54,9 +56,14 @@ export default function Footer() {
           <div className="mt-5 space-y-2 text-sm text-paper/70">
             <p className="flex items-center gap-2">
               <Mail size={15} className="text-brand-300" />
-              <a href="mailto:printrelayuk@gmail.com" className="transition-colors hover:text-brand-300">
-                printrelayuk@gmail.com
-              </a>
+              {/* Plain selectable text (no mailto) so no email app is ever forced open. */}
+              <span className="select-all">printrelayuk@gmail.com</span>
+            </p>
+            <p className="flex items-center gap-2">
+              <Send size={15} className="text-brand-300" />
+              <Link to="/quote" className="transition-colors hover:text-brand-300">
+                Request a quote online
+              </Link>
             </p>
             <p className="flex items-center gap-2">
               <MapPin size={15} className="text-brand-300" /> Sevenoaks, Kent, United Kingdom

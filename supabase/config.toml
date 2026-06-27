@@ -1,0 +1,9 @@
+# Minimal Supabase CLI config. See https://supabase.com/docs/guides/cli/config
+# Update project_id to match your linked project ref if you use `supabase link`.
+project_id = "printrelay-uk"
+
+# The public quote form (anon key) must be able to call this function, so JWT
+# verification is disabled. Security is enforced INSIDE the function: it
+# validates input, verifies Turnstile, and writes with the service-role key.
+[functions.submit-enquiry]
+verify_jwt = false

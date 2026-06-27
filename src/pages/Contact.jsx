@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Mail, MapPin, Clock, MessageSquare, Info } from 'lucide-react'
+import { Mail, MapPin, Clock, MessageSquare, Info, Send } from 'lucide-react'
 import PageHeader from '../components/ui/PageHeader.jsx'
 
 const CONTACT_EMAIL = 'printrelayuk@gmail.com'
@@ -8,11 +8,8 @@ const INFO_CARDS = [
   {
     icon: Mail,
     title: 'Email',
-    body: (
-      <a href={`mailto:${CONTACT_EMAIL}`} className="break-all text-sm text-brand-600 hover:underline">
-        {CONTACT_EMAIL}
-      </a>
-    ),
+    // Plain selectable text — no mailto, so no email app is forced open.
+    body: <span className="select-all break-all text-sm text-ink-soft">{CONTACT_EMAIL}</span>,
   },
   {
     icon: Clock,
@@ -81,22 +78,25 @@ export default function Contact() {
 
         {/* Right: email CTA + what to include */}
         <div className="space-y-5 lg:col-span-2">
-          {/* Email support */}
+          {/* Start a quote / ask a question */}
           <div className="card p-6">
-            <h2 className="text-lg font-semibold text-ink">Email our support team</h2>
+            <h2 className="text-lg font-semibold text-ink">Start a quote or ask a question</h2>
             <p className="mt-1 text-sm leading-relaxed text-ink-soft">
-              Send us an email and we will get back to you. We aim to respond within 1–2 working
-              days, Monday to Friday.
+              The quickest way to reach us is the online quote form — tell us what you need and we’ll
+              reply with a price and lead time, usually within 1–2 working days, Monday to Friday.
             </p>
-            <a
-              href={`mailto:${CONTACT_EMAIL}?subject=PrintRelay%20Support%20Enquiry`}
-              className="btn-primary mt-4 inline-flex"
-            >
-              <Mail size={18} />
-              Send us an email
-            </a>
-            <p className="mt-2 text-xs text-ink-soft">
-              Opens your email client addressed to {CONTACT_EMAIL}
+            <div className="mt-4 flex flex-wrap gap-3">
+              <Link to="/quote" className="btn-primary inline-flex">
+                <Send size={18} /> Request a quote
+              </Link>
+              <Link to="/faq" className="btn-ghost inline-flex">
+                Read the FAQ
+              </Link>
+            </div>
+            <p className="mt-3 text-xs text-ink-soft">
+              Prefer email? Write to{' '}
+              <span className="select-all font-medium text-ink">{CONTACT_EMAIL}</span> and we’ll pick
+              it up.
             </p>
           </div>
 

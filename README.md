@@ -2,7 +2,7 @@
 
 **UK 3D printing service & overflow fulfilment — instant online quotes for sellers, makers and businesses.**
 
-🌐 **Live site:** [PrintRelay UK](https://leonfxd200.github.io/PrintRelayUK/)
+🌐 **Live site:** [printrelay.co.uk](https://printrelay.co.uk/)
 
 Upload one or more models, get an **instant 3D printing quote**, choose material (PLA, PETG, ABS, TPU) and dispatch speed, then track the job from quote to dispatch. A UK-based **online 3D printing service** with **white-label fulfilment** and transparent, itemised pricing.
 
@@ -56,13 +56,14 @@ It also serves **everyday customers** who simply have an STL/3MF/OBJ file and wa
 - Material, colour, layer-height, infill, printer profile, quantity, dispatch speed, shipping method and postcode controls.
 - White-label packaging, ship-direct and urgent toggles, with printer/material compatibility warnings.
 - **Save any estimate as a draft** (lands in the dashboard) or request a quote — with a **File-responsibility confirmation** checkbox before submitting.
+- **In-site quote request form** (`/quote`) — a clean, mobile-friendly, accessible enquiry form (name, email, phone, business, what you need printed, quantity, material, colour, dimensions, STL upload, deadline, budget, notes, consent) with full validation and loading / success / error states. **No `mailto`, no email-app prompts** — every quote CTA lands here. The estimator hands its spec over so customers don't retype it.
 
 ### Dashboards
 - **Customer / seller dashboard**: active jobs, saved estimates, job history, animated **status timeline**, tracking numbers, one-click **reorder**, saved **print preferences** and **company / white-label settings**.
-- **Admin / operations dashboard**: KPI cards (jobs this week, urgent jobs, estimated revenue, average print hours, top material, queue capacity), **jobs-by-status** and **material-demand** charts, a searchable/filterable **print queue**, and full per-job editing — change status, assign printer, edit price, add tracking, add quote notes, mark issue / dispatched / complete, and view file metadata.
+- **Admin / operations dashboard**: a tabbed view with **Quote enquiries** (every `/quote` submission — search/filter, view full details, **download the uploaded file**, add internal notes, and move status through new → contacted → quoted → accepted → declined) and the existing **Print queue** (KPI cards, jobs-by-status and material-demand charts, searchable queue, full per-job editing — status, printer, price, tracking, notes, issue/dispatched/complete).
 
 ### Platform
-- 12 pages incl. Home, Estimator, How it works, Pricing, Materials, Seller / white-label, FAQ, File responsibility, Contact, Auth and 404.
+- 14 pages incl. Home, Estimator, **Quote request**, How it works, Pricing, Materials, Seller / white-label, FAQ, Terms & file responsibility, **Privacy Policy**, Contact, Auth and 404.
 - Demo authentication with role-based routing (customer / seller / admin) and protected routes.
 - Polished UX throughout: loading, empty and success states, form validation, status badges, animated quote results, responsive mobile nav and footer.
 - **Demo mode** banner and a **Reset demo data** button (data persists in `localStorage`).
@@ -181,6 +182,14 @@ For **STL** files the model volume is computed exactly from the mesh (signed-tet
 
 ## 🔌 Going live with Supabase (future)
 
+> **Note:** the **quote enquiry system** has a complete, production-hardened
+> backend already (private storage, locked-down RLS, an Edge Function and real
+> admin auth) — see [Quote enquiries: demo mode → live](#-quote-enquiries-demo-mode--live-supabase--resend--turnstile)
+> and [`supabase/README.md`](supabase/README.md). The schema below is the
+> **optional legacy demo** for the customer/seller *jobs* dashboards; if you wire
+> it up, apply the same hardening (no public insert, owner/admin-only RLS, a
+> private bucket) rather than the simplified suggestion shown here.
+
 The app is built so you can switch from mock mode to a real backend **without changing component code** — only [`src/lib/mockDb.js`](src/lib/mockDb.js) needs its functions re-pointed at Supabase (each one already documents its query equivalent).
 
 1. **Create a Supabase project** at [supabase.com](https://supabase.com).
@@ -238,22 +247,134 @@ The app is built so you can switch from mock mode to a real backend **without ch
 
 ---
 
-## 🌐 Deploy to GitHub Pages
+## 📨 Quote enquiries: demo mode → live (Supabase · Resend · Turnstile)
 
-The app uses a **HashRouter** and `base: './'`, so it works on GitHub Pages with no extra redirect/404 config.
+The `/quote` form works **right now in demo mode with zero setup**, and is built
+to drop in real services later **without touching component code**. Here's
+exactly how to go live, step by step.
 
-1. Push the project to a GitHub repo (e.g. `printrelay-uk`).
-2. The repo already includes `gh-pages` and a deploy script:
+### A. Demo mode (default — no accounts, no keys)
+
+- Run `npm run dev`, fill in the form and submit. The enquiry is saved to your
+  browser's `localStorage`.
+- Sign in as admin (`admin@printrelay.uk` / `demo`) → **Admin → Quote enquiries**
+  to view it, add notes, change status (new → contacted → quoted → accepted →
+  declined) and **download** the file.
+- Small uploads are kept inline so the download button works offline; large
+  files keep metadata only. **No data leaves your device and no email is sent.**
+- **Reset demo data** on the admin dashboard clears enquiries too.
+
+> The live setup is **hardened**: the public form can only write through a
+> secure Edge Function, the database and the private file bucket reject all
+> anonymous access, and `/admin` requires a real Supabase Auth admin account.
+> No service-role key, Resend key or Turnstile secret ever touches the browser.
+> Full details and a verification check are in **[`supabase/README.md`](supabase/README.md)**.
+
+### B. Turn on the database + file storage (Supabase)
+
+1. Create a project at [supabase.com](https://supabase.com) — pick an **EU/UK region**.
+2. In **SQL Editor**, run the migrations **in order**:
+   - [`supabase/migrations/0001_init_quote_enquiries.sql`](supabase/migrations/0001_init_quote_enquiries.sql) — `quote_enquiries` table, `app_admins` allow-list, `is_admin()`, and RLS that allows **no public insert** and **admin-only** read/update.
+   - [`supabase/migrations/0002_storage_enquiry_files.sql`](supabase/migrations/0002_storage_enquiry_files.sql) — a **private** `enquiry-files` bucket with **admin-only** read (no public upload/download).
+3. Deploy the submission function (this is the only public write path):
    ```bash
-   npm run deploy
+   supabase functions deploy submit-enquiry
    ```
-   This builds to `dist/` and publishes it to the `gh-pages` branch.
-3. In your repo: **Settings → Pages → Source: `gh-pages` branch** (root).
-4. Your site goes live at `https://<your-username>.github.io/<repo-name>/`.
+4. Copy `.env.example` → `.env` and set `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY`
+   (from **Project Settings → API**), then restart `npm run dev`.
 
-> If you deploy to a custom domain at the root, you can change `base` to `'/'` in `vite.config.js`.
+### C. Create your admin account (no public sign-up)
 
-You can also deploy the `dist/` folder to **Netlify**, **Vercel** or **Cloudflare Pages** by pointing them at `npm run build`.
+1. **Authentication → Users → Add user**: create your own email + password.
+2. **Authentication → Sign In / Providers → Email**: turn **off** “Allow new users to sign up”.
+3. Add yourself to the allow-list (SQL Editor):
+   ```sql
+   insert into public.app_admins (email) values ('you@yourdomain.co.uk');
+   ```
+   Now only that account can open `/admin`, read enquiries, or download files —
+   enforced by Postgres RLS, not by the browser.
+
+### D. Turn on email notifications (Resend) — optional
+
+```bash
+supabase secrets set RESEND_API_KEY=re_xxx \
+  ENQUIRY_FROM_EMAIL="PrintRelay UK <quotes@yourdomain.co.uk>" \
+  ENQUIRY_NOTIFY_EMAIL=you@yourdomain.co.uk
+```
+The `submit-enquiry` function sends a notification to you and an acknowledgement
+to the customer (templates in
+[`supabase/functions/submit-enquiry/templates.ts`](supabase/functions/submit-enquiry/templates.ts)).
+With no `RESEND_API_KEY` it stores the enquiry and simply sends nothing.
+
+### E. Turn on bot protection (Cloudflare Turnstile) — optional
+
+1. Create a Turnstile widget and put the **public site key** in `.env` as `VITE_TURNSTILE_SITE_KEY`.
+2. Give the function the **secret** so it can verify tokens server-side:
+   ```bash
+   supabase secrets set TURNSTILE_SECRET_KEY=0x_your_secret
+   ```
+   The function verifies the token **before storing anything**. With no site key,
+   Turnstile is disabled and **no third-party script loads**.
+
+---
+
+## 🧪 Tests
+
+Lightweight [Vitest](https://vitest.dev) unit tests cover the quote-form
+validation rules and the mock enquiry submission/round-trip:
+
+```bash
+npm test          # run once
+npm run test:watch
+```
+
+See [`src/utils/validateQuote.test.js`](src/utils/validateQuote.test.js) and
+[`src/lib/enquiries.test.js`](src/lib/enquiries.test.js).
+
+---
+
+## 🌐 Deploy & routing (why HashRouter)
+
+The app uses **HashRouter** (`/#/quote`) and `base: './'`. This is a deliberate
+choice for the hosting: it's served on **GitHub Pages** at the custom domain
+**printrelay.co.uk** (see `public/CNAME`), and static hosts can't rewrite
+arbitrary deep paths to `index.html`.
+
+**Why hash routing here:** with HashRouter the server only ever receives a
+request for `/` and returns `index.html` (HTTP 200) — the route lives in the URL
+fragment and is resolved in the browser. So **no shared link, Google result or
+sitemap entry can ever 404**, on any static host, with zero redirect/404 config.
+A `BrowserRouter` with clean `/quote` URLs would need the GitHub Pages
+`404.html` SPA hack, which returns a *soft 404* status for deep paths — exactly
+what we want to avoid.
+
+**What this means for SEO (no overclaiming):** because crawlers strip the `#…`
+fragment, the site is effectively a **single indexable URL — the homepage**.
+Hash routes are **not** separately indexable Google pages. Accordingly:
+
+- `public/sitemap.xml` lists **only the homepage**.
+- Canonical and `og:url` always point at the **homepage** — we do *not* present
+  hash URLs as canonical/indexable.
+- `/admin` and `/quote` (plus `/login`, `/register`, `/dashboard`) are served
+  with **`noindex`** so they can never be a search result.
+- Per-route `<title>` / description still update for browser tabs and share
+  previews — a UX nicety, not per-page indexing.
+
+**For real per-page SEO** (each marketing page individually indexable at a clean
+`/path`), move hosting to a platform with SPA **rewrite** support — **Cloudflare
+Pages, Netlify or Vercel** — add a rewrite of all paths to `index.html`, then
+switch `src/main.jsx` to `BrowserRouter` and set `base: '/'`. GitHub Pages can't
+do this without the soft-404 `404.html` hack, so on the current host we stay on
+HashRouter for reliability.
+
+**Deploy:**
+
+1. Push to a GitHub repo.
+2. `npm run deploy` builds to `dist/` and publishes the `gh-pages` branch.
+3. **Settings → Pages → Source: `gh-pages` branch** (root). The `CNAME` keeps the
+   `printrelay.co.uk` custom domain.
+
+You can also deploy `dist/` to **Netlify**, **Vercel** or **Cloudflare Pages** via `npm run build`.
 
 ---
 

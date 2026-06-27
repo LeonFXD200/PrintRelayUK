@@ -10,14 +10,24 @@ import {
   Loader2,
   Search,
   RotateCcw,
+  Inbox,
+  Wrench,
 } from 'lucide-react'
 import PageHeader from '../components/ui/PageHeader.jsx'
 import StatCard from '../components/admin/StatCard.jsx'
 import BarChart from '../components/admin/BarChart.jsx'
 import AdminJobRow from '../components/admin/AdminJobRow.jsx'
-import { Select, Toggle } from '../components/ui/Field.jsx'
-import { listJobs, updateJob, resetDemoData } from '../lib/mockDb.js'
+import AdminEnquiryRow from '../components/admin/AdminEnquiryRow.jsx'
+import { Select } from '../components/ui/Field.jsx'
+import {
+  listJobs,
+  updateJob,
+  listEnquiries,
+  updateEnquiry,
+  resetDemoData,
+} from '../lib/mockDb.js'
 import { STATUSES } from '../data/statuses.js'
+import { ENQUIRY_STATUSES } from '../data/enquiryStatuses.js'
 import { materials, getMaterial } from '../data/materials.js'
 import { formatGBP, formatHours } from '../utils/format.js'
 
@@ -32,13 +42,20 @@ const WEEK_MS = 7 * 24 * 60 * 60 * 1000
  */
 export default function AdminDashboard() {
   const [loading, setLoading] = useState(true)
+  const [tab, setTab] = useState('enquiries') // 'enquiries' | 'queue'
   const [jobs, setJobs] = useState([])
+  const [enquiries, setEnquiries] = useState([])
   const [statusFilter, setStatusFilter] = useState('all')
   const [urgentOnly, setUrgentOnly] = useState(false)
   const [query, setQuery] = useState('')
+  // enquiry-tab filters (kept separate from the queue filters)
+  const [enqStatus, setEnqStatus] = useState('all')
+  const [enqQuery, setEnqQuery] = useState('')
 
   async function refresh() {
-    setJobs(await listJobs())
+    const [j, e] = await Promise.all([listJobs(), listEnquiries()])
+    setJobs(j)
+    setEnquiries(e)
     setLoading(false)
   }
   useEffect(() => {
@@ -50,11 +67,37 @@ export default function AdminDashboard() {
     setJobs((prev) => prev.map((j) => (j.id === id ? updated : j)))
   }
 
+  async function handleUpdateEnquiry(id, patch) {
+    const updated = await updateEnquiry(id, patch)
+    setEnquiries((prev) => prev.map((e) => (e.id === id ? updated : e)))
+  }
+
   async function handleReset() {
     resetDemoData()
     setLoading(true)
     await refresh()
   }
+
+  // filtered enquiries
+  const filteredEnquiries = useMemo(
+    () =>
+      enquiries.filter((e) => {
+        if (enqStatus !== 'all' && e.status !== enqStatus) return false
+        if (
+          enqQuery &&
+          !`${e.id} ${e.name} ${e.email} ${e.what_printed}`
+            .toLowerCase()
+            .includes(enqQuery.toLowerCase())
+        )
+          return false
+        return true
+      }),
+    [enquiries, enqStatus, enqQuery],
+  )
+  const newEnquiryCount = useMemo(
+    () => enquiries.filter((e) => e.status === 'new').length,
+    [enquiries],
+  )
 
   // ---- derived metrics ----
   const metrics = useMemo(() => {
@@ -116,7 +159,7 @@ export default function AdminDashboard() {
       <PageHeader
         eyebrow="Admin"
         title="Operations dashboard"
-        subtitle="Every job, estimate and quote request. Manage status, pricing, printers and dispatch."
+        subtitle="Quote enquiries and the print queue. Review requests, manage status, pricing and dispatch."
       >
         <button onClick={handleReset} className="btn-ghost">
           <RotateCcw size={16} /> Reset demo data
@@ -124,11 +167,48 @@ export default function AdminDashboard() {
       </PageHeader>
 
       <div className="section py-8">
+        {/* Tabs */}
+        <div role="tablist" aria-label="Dashboard sections" className="mb-6 flex flex-wrap gap-2">
+          <button
+            role="tab"
+            aria-selected={tab === 'enquiries'}
+            onClick={() => setTab('enquiries')}
+            className={`btn px-4 py-2.5 text-sm ${
+              tab === 'enquiries'
+                ? 'bg-brand-600 text-white'
+                : 'border border-ink/15 bg-white text-ink hover:bg-ink/[0.04]'
+            }`}
+          >
+            <Inbox size={16} /> Quote enquiries
+            {newEnquiryCount > 0 && (
+              <span
+                className={`ml-1 rounded-full px-1.5 py-0.5 text-xs font-semibold ${
+                  tab === 'enquiries' ? 'bg-white/20 text-white' : 'bg-brand-100 text-brand-700'
+                }`}
+              >
+                {newEnquiryCount} new
+              </span>
+            )}
+          </button>
+          <button
+            role="tab"
+            aria-selected={tab === 'queue'}
+            onClick={() => setTab('queue')}
+            className={`btn px-4 py-2.5 text-sm ${
+              tab === 'queue'
+                ? 'bg-brand-600 text-white'
+                : 'border border-ink/15 bg-white text-ink hover:bg-ink/[0.04]'
+            }`}
+          >
+            <Wrench size={16} /> Print queue
+          </button>
+        </div>
+
         {loading ? (
           <div className="flex justify-center py-20">
             <Loader2 className="animate-spin text-brand-500" size={32} />
           </div>
-        ) : (
+        ) : tab === 'queue' ? (
           <>
             {/* metric cards */}
             <div className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">
@@ -217,6 +297,88 @@ export default function AdminDashboard() {
               ) : (
                 <div className="card py-14 text-center text-ink-soft">
                   No jobs match your filters.
+                </div>
+              )}
+            </div>
+          </>
+        ) : (
+          /* ============================ ENQUIRIES ============================ */
+          <>
+            {/* enquiry stat cards */}
+            <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+              <StatCard icon={Inbox} label="Total enquiries" value={enquiries.length} delay={0} />
+              <StatCard
+                icon={Zap}
+                label="New / unactioned"
+                value={newEnquiryCount}
+                tone={newEnquiryCount > 0 ? 'ember' : 'brand'}
+                delay={0.05}
+              />
+              <StatCard
+                icon={Clock}
+                label="Quoted"
+                value={enquiries.filter((e) => e.status === 'quoted').length}
+                delay={0.1}
+              />
+              <StatCard
+                icon={PoundSterling}
+                label="Accepted"
+                value={enquiries.filter((e) => e.status === 'accepted').length}
+                tone="emerald"
+                delay={0.15}
+              />
+            </div>
+
+            <div className="mt-8">
+              <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+                <div>
+                  <h2 className="text-xl font-bold text-ink">Quote enquiries</h2>
+                  <p className="text-sm text-ink-soft">
+                    {filteredEnquiries.length} of {enquiries.length} shown
+                  </p>
+                </div>
+                <div className="flex flex-wrap items-end gap-3">
+                  <div className="relative">
+                    <Search
+                      size={15}
+                      className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-soft"
+                    />
+                    <input
+                      value={enqQuery}
+                      onChange={(e) => setEnqQuery(e.target.value)}
+                      placeholder="Search name, email, file…"
+                      className="field w-56 pl-9"
+                      aria-label="Search enquiries"
+                    />
+                  </div>
+                  <div className="w-44">
+                    <Select
+                      value={enqStatus}
+                      onChange={setEnqStatus}
+                      options={[
+                        { value: 'all', label: 'All statuses' },
+                        ...ENQUIRY_STATUSES.map((s) => ({ value: s.id, label: s.label })),
+                      ]}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {filteredEnquiries.length ? (
+                <div className="space-y-2">
+                  {filteredEnquiries.map((enquiry) => (
+                    <AdminEnquiryRow
+                      key={enquiry.id}
+                      enquiry={enquiry}
+                      onUpdate={handleUpdateEnquiry}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="card py-14 text-center text-ink-soft">
+                  {enquiries.length
+                    ? 'No enquiries match your filters.'
+                    : 'No quote enquiries yet. Submissions from the /quote form appear here.'}
                 </div>
               )}
             </div>
