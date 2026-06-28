@@ -9,13 +9,19 @@ to `localStorage`).
 supabase/
 ├── migrations/
 │   ├── 0001_init_quote_enquiries.sql   table, app_admins allow-list, is_admin(), RLS (admin-only read/update, NO public insert)
-│   └── 0002_storage_enquiry_files.sql  PRIVATE bucket + admin-only read policy (NO public upload/download)
+│   ├── 0002_storage_enquiry_files.sql  PRIVATE bucket + admin-only read policy (NO public upload/download)
+│   ├── 0003_grant_service_role_quote_access.sql  service-role grant on quote_enquiries + sequence (historical record of an already-applied fix)
+│   └── 0004_admin_phase1_enquiries.sql admin Phase 1: adds quote_price, widens status to the fulfilment lifecycle, PR-#### references (additive)
 ├── functions/
 │   └── submit-enquiry/                 the ONLY public write path
 │       ├── index.ts                    validate → verify Turnstile → signed upload URL → insert → email
 │       └── templates.ts                admin + customer HTML emails
 └── config.toml
 ```
+
+> ⚠️ **These migrations were applied manually in Supabase** and may not exist in the Supabase CLI
+> migration history. Do **not** run `supabase db push` or apply these migration files through the
+> CLI until the migration history has been checked/repaired against the live project.
 
 ## Security model (how the requirements are met)
 
@@ -36,7 +42,9 @@ supabase/
 
 ### 1. Create the project & schema
 1. Create a project at [supabase.com](https://supabase.com) — pick an **EU/UK region**.
-2. In **SQL Editor**, run the migrations **in order**: `0001_…` then `0002_…`.
+2. In **SQL Editor**, run the migrations **in order**: `0001_…`, `0002_…`, `0003_…`, then `0004_…`.
+   (`0003_…` is a historical service-role grant; `0004_…` is additive and idempotent — both safe to
+   run on an existing live table.)
 
 ### 2. Create your admin account (no public sign-up)
 1. **Authentication → Users → Add user** — create your own email + password.
