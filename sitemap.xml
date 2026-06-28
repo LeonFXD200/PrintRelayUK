@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  PrintRelay UK is a client-side single-page app that uses hash routing
+  (HashRouter), e.g. https://printrelay.co.uk/#/quote. On static hosting
+  (GitHub Pages) this guarantees no route can ever 404: the server only ever
+  receives a request for "/" and returns index.html (HTTP 200); the page is then
+  chosen client-side from the URL fragment.
+
+  Search engines ignore the URL fragment (#…), so every in-app route resolves to
+  the same indexable document: the homepage below. Listing fragment URLs as
+  separate <url> entries would be misleading (they are not distinct documents),
+  so we list the single canonical URL. All pages are reachable from the homepage
+  via in-app navigation, which crawlers follow.
+-->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://printrelay.co.uk/</loc>
-    <lastmod>2026-06-26</lastmod>
+    <lastmod>2026-06-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
