@@ -35,6 +35,10 @@ function userFromSession(session, isAdmin) {
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
+  // True only while a Supabase session's admin role is being resolved. Unlike
+  // `loading` (initial mount only) this also covers a fresh interactive sign-in,
+  // so the login page can wait for the is_admin() result before routing.
+  const [roleLoading, setRoleLoading] = useState(false)
 
   // ----- LIVE: Supabase Auth session + server-side admin check ---------------
   useEffect(() => {
@@ -45,10 +49,13 @@ export function AuthProvider({ children }) {
       if (!session?.user) {
         if (active) {
           setUser(null)
+          setRoleLoading(false)
           setLoading(false)
         }
         return
       }
+      // The admin role is now resolving (covers fresh sign-ins, not just mount).
+      if (active) setRoleLoading(true)
       // Ask the database whether this account is an admin (app_admins allow-list).
       let admin = false
       try {
@@ -59,6 +66,7 @@ export function AuthProvider({ children }) {
       }
       if (active) {
         setUser(userFromSession(session, admin))
+        setRoleLoading(false)
         setLoading(false)
       }
     }
@@ -160,6 +168,7 @@ export function AuthProvider({ children }) {
     () => ({
       user,
       loading,
+      isRoleLoading: roleLoading,
       isSupabaseConfigured,
       isAuthed: Boolean(user),
       isAdmin: user?.role === 'admin',
@@ -168,7 +177,7 @@ export function AuthProvider({ children }) {
       register,
       logout,
     }),
-    [user, loading],
+    [user, loading, roleLoading],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
