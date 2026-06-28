@@ -1,0 +1,32 @@
+-- ===========================================================================
+-- 0005_grant_authenticated_quote_select.sql
+-- ---------------------------------------------------------------------------
+-- Fixes "permission denied for table quote_enquiries" (SQLSTATE 42501) for a
+-- signed-in admin reading enquiries from the browser.
+--
+-- ROOT CAUSE: 0001 enables RLS and creates an admin-only SELECT *policy*
+-- (to authenticated, using public.is_admin()), but the table-level SELECT
+-- *privilege* for the `authenticated` role was never granted. Postgres checks
+-- the GRANT before RLS, so every authenticated read was rejected at the
+-- privilege layer — the same class of gap already fixed for service_role in
+-- 0003. Verified live: is_admin() returns true, yet the select returns 42501.
+--
+-- WHY THIS IS SAFE (RLS is unchanged and still governs row visibility):
+--   * Table GRANT and RLS are two independent gates; BOTH must pass to return a
+--     row. This statement only satisfies the privilege gate — it does NOT widen
+--     which rows are visible.
+--   * The admin-only policy "Admins can read enquiries"
+--     (for select to authenticated using public.is_admin()) stays in force, so a
+--     non-admin authenticated user still matches zero rows.
+--   * Only `authenticated` is granted here; `anon` (unauthenticated) gets no
+--     grant and has no SELECT policy, so the public still cannot read the table.
+--   * `authenticated` already holds `usage` on schema public (is_admin() RPC
+--     works), so no schema grant is needed.
+--
+-- ADDITIVE + idempotent (re-running a GRANT is a no-op). Read-only Phase 2A
+-- needs SELECT only — no UPDATE/INSERT grant is added. Run MANUALLY in the
+-- Supabase SQL Editor after review; do NOT run `supabase db push`. Apply after
+-- 0001-0004.
+-- ===========================================================================
+
+grant select on table public.quote_enquiries to authenticated;
